@@ -1,4 +1,3 @@
-from wsgiref import validate
 from rest_framework import serializers
 
 from authentication.models import User
@@ -21,7 +20,3 @@ class RegistrationSerializer(serializers.ModelSerializer):
         instance.save()
         
         return instance
-    
-class LoginSerializer(serializers.ModelSerializer):
-    username = serializers.CharField()
-    password = serializers.CharField()  

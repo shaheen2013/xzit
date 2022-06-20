@@ -1,16 +1,13 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 
-from xzit.mixins.models import TimeStampMixin
+from xzit.mixins.models import AuthorMixin, TimeStampMixin
 
 
 # Create your models here.
-
-User = get_user_model()
-
-class Post(TimeStampMixin):
-       id = models.AutoField(primary_key=True)
-       user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+class Post(TimeStampMixin, AuthorMixin):
+       description = models.TextField(null=True, blank=True)
+       total_shares = models.IntegerField(default=0)
+       container_ratio = models.IntegerField(default=0)
        
        
        class Meta:
