@@ -19,10 +19,7 @@ class User(AbstractUser, TimeStampMixin):
     city = models.CharField(max_length=255, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     latitude = models.CharField(max_length=255, null=True, blank=True)
-
-    facebook_id = models.CharField(max_length=255, null=True, blank=True)
-    google_id = models.CharField(max_length=255, null=True, blank=True)
-
+    
     business_name = models.CharField(max_length=255, null=True, blank=True)
     business_manager = models.CharField(max_length=255, null=True, blank=True)
     business_type = models.CharField(max_length=255, null=True, blank=True)
@@ -40,9 +37,9 @@ class User(AbstractUser, TimeStampMixin):
 #     user = models.OneToOneField(User, on_delete=models.CASCADE)
 #
 #
-# class UserSocial(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#
+class UserSocial(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
 #
 # class UserBusiness(models.Model):
 #     user = models.OneToOneField(User, on_delete=models.CASCADE)
