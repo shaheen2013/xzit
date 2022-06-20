@@ -13,7 +13,6 @@ from distutils.command.config import config
 import os
 from pathlib import Path
 import pymysql
-from datetime import timedelta
 
 pymysql.version_info = (1, 4, 2, "final", 0)
 pymysql.install_as_MySQLdb()
