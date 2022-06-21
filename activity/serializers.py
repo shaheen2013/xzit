@@ -1,18 +1,20 @@
-
-from dataclasses import fields
-from pyexpat import model
-from wsgiref import validate
 from rest_framework import serializers
-from activity.models import Post, PostLike
+from activity.models import Post, PostLike, Story
 
 class PostSerializer(serializers.ModelSerializer):
     extra_kwargs = {
-        'id': {'read_only' : True}
+        'id': {'read_only' : True},
+        'created_at': {'read_only': True}
     }
     class Meta:
         model = Post
-        fields = ('id', 'description', 'created_by', 'total_shares', 'container_ratio')
+        fields = ('id', 'description')
         
+class PostManageSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model=Post
+        fields = ['total_shares', 'container_ratio']
         
 class PostInterectionSerializer(serializers.ModelSerializer):
     
@@ -30,3 +32,14 @@ class PostInterectionSerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.save()
         return instance
+    
+
+class StorySerializer(serializers.ModelSerializer):
+    
+    extra_kwargs = {
+        'story_time': {'read_only' : True},
+        
+    }
+    class Meta:
+        model=Story
+        fields=('id', 'story_type', 'media', 'view', 'story_time')
