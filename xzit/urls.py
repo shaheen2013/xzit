@@ -16,17 +16,36 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from rest_framework.schemas import get_schema_view
+
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="XZIT API",
+        default_version='v1',
+        description="API for xzit social",
+        terms_of_service="https://www.example.com/policies/terms/",
+        contact=openapi.Contact(email="contact@example.local"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('openapi/', get_schema_view(title="XZIT API", description="API for xzit social", version="1.0.0"),
-         name='openapi-schema'),
-    path('api-doc/', TemplateView.as_view(template_name='swagger-ui.html', extra_context={'schema_url': 'openapi-schema'}), name='swagger-ui'),
-    
-    path('api/', include([
-        path('auth/', include('authentication.urls')),
-        path('', include('activity.urls'))
-    ]))
-    
+    # path('openapi/', #get_schema_view(title="XZIT API", description="API for xzit social", version="1.0.0"),
+    #     schema_view, name='openapi-schema'),
+    # path('api-doc/', TemplateView.as_view(template_name='swagger-ui.html', extra_context={'schema_url': 'openapi-schema'}), name='swagger-ui'),
+    path('api-doc/',
+         schema_view.with_ui('swagger', cache_timeout=0),
+         name='schema-swagger-ui'),
+    path(
+        'api/',
+        include([
+            path('auth/', include('authentication.urls')),
+            path('', include('activity.urls'))
+        ]))
 ]

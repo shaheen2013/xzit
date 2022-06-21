@@ -17,8 +17,10 @@ pymysql = "*"
 pyyaml = "*"
 uritemplate = "*"
 djangorestframework-simplejwt = "*"
+drf-yasg = "*"
 
 [dev-packages]
+yapf = "*"
 
 [requires]
 python_version = "3.10"

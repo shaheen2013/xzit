@@ -9,10 +9,13 @@ class Post(TimeStampMixin, AuthorMixin):
        total_shares = models.IntegerField(default=0)
        container_ratio = models.IntegerField(default=0)
        
-       def __str__(self):
-              return 'Hello'
-       
-       
        class Meta:
               db_table="posts"
+              
+       def __str__(self):
+              return self.created_by.username
+              
+              
+class PostLike(TimeStampMixin, AuthorMixin):
+       post = models.ForeignKey(Post, on_delete=models.CASCADE)
        
