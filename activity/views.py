@@ -26,6 +26,9 @@ class PostUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
        lookup_field= 'id'
        permission_classes = [IsAuthenticated]
        
+       def get_queryset(self):
+              return Post.objects.filter(created_by=self.request.user)
+       
 class PostInterectionCreateAPIView(generics.CreateAPIView):
        serializer_class=PostInterectionSerializer
        lookup_field = 'id'
@@ -38,8 +41,14 @@ class StoryCreateListAPIView(generics.ListCreateAPIView):
        queryset = Story.objects.all()
        permission_classes = [IsAuthenticated] 
        
+       def get_queryset(self):
+              return Story.objects.filter(created_by=self.request.user)
+       
 class StoryRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
        serializer_class = StorySerializer
        queryset = Story.objects.all()
        lookup_field = 'id'
        permission_classes = [IsAuthenticated]
+       
+       def get_queryset(self):
+              return Story.objects.filter(created_by=self.request.user)
