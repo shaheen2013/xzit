@@ -85,6 +85,7 @@ MIDDLEWARE = [
     'django_userforeignkey.middleware.UserForeignKeyMiddleware',
 ]
 
+GROUPS = ['users', 'merchants']
 AUTH_USER_MODEL = 'authentication.User'
 
 ROOT_URLCONF = 'xzit.urls'

@@ -1,5 +1,7 @@
-from rest_framework import serializers
-from activity.models import Post, PostLike, Story
+from genericpath import exists
+from rest_framework import serializers, status
+from rest_framework.response import Response
+from activity.models import Post, PostComment, PostLike, Story
 from authentication.serializers import RegistrationSerializer
 
 class PostSerializer(serializers.ModelSerializer):
@@ -12,14 +14,22 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ('id', 'description')
         
 class PostManageSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model=Post
         fields = ['total_shares', 'container_ratio']
         
-        
+
+class PostCommentSerializer(serializers.ModelSerializer):
+    extra_kwargs={
+        'id': {'read_only': True},
+        'created_by': {'read_only': True},
+    }
+
+    class Meta:
+        model = PostComment
+        fields = ['id', 'post', 'created_by', 'comment']  
+
 class PostInterectionSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = PostLike
         fields = ('created_by', 'post')

@@ -6,4 +6,6 @@ from authentication.models import User
 # Register your models here.
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-       list_display = ['username', 'email', 'created_at']
+       list_display = ['name' ,'username', 'email', 'created_at']
+       
+       

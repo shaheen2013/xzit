@@ -1,11 +1,13 @@
 from django.urls import path
 
-from activity.views import PostInterectionCreateAPIView, PostListApiView, PostUpdateDeleteApiView, StoryCreateListAPIView, StoryRetrieveUpdateDeleteAPIView
+from activity import views
 
 urlpatterns = [
-    path('posts/', PostListApiView.as_view()),
-    path('posts/<int:id>/', PostUpdateDeleteApiView.as_view()),
-    path('posts/interection/', PostInterectionCreateAPIView.as_view()),
-    path('stories/', StoryCreateListAPIView.as_view()),
-    path('stories/<int:id>/', StoryRetrieveUpdateDeleteAPIView.as_view())
+    path('posts/', views.PostListApiView.as_view()),
+    path('posts/<int:id>/', views.PostUpdateDeleteApiView.as_view()),
+    path('posts/interection/', views.PostInterectionCreateAPIView.as_view()),
+    path('posts/comment/', views.PostCommentAPIView.as_view()),
+    path('posts/<int:post_id>/comments/', views.PostCommentsAPIView.as_view()),
+    path('stories/', views.StoryCreateAPIView.as_view()),
+    path('stories/<int:id>/', views.StoryRetrieveUpdateDeleteAPIView.as_view())
 ]
