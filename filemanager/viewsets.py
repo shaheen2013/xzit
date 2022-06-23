@@ -11,3 +11,7 @@ class FileManagerViewSet(viewsets.ModelViewSet):
        serializer_class = FileManagerSerializer
        parser_classes = (MultiPartParser, )
        permission_classes = [IsAuthenticated]
+       
+
+       def get_queryset(self):
+        return FileManager.objects.filter(created_by=self.request.user)
