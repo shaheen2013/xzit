@@ -30,6 +30,29 @@ project
 |    |   tests.py
 |    |   urls.py
 |    |   views.py
+|____activity -> django app
+|    |   migrations
+|    |   __init__.py
+|    |   admin.py
+|    |   models.py
+|    |   serializers.py
+|    |   tests.py
+|    |   urls.py
+|    |   views.py
+|_____filemanager -> django app 
+|    |   __init__.py
+|    |   admin.py
+|    |   models.py
+|    |   routers.py
+|    |   serializers.py
+|    |   tests.py
+|    |   urls.py
+|    |   views.py
+|    |   viewsets.py
+| 
+|____|   media
+|
+|
 └───templates
 ```
 
