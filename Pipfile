@@ -18,6 +18,7 @@ pyyaml = "*"
 uritemplate = "*"
 djangorestframework-simplejwt = "*"
 drf-yasg = "*"
+python-decouple = "*"
 
 [dev-packages]
 yapf = "*"

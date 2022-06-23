@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-from distutils.command.config import config
+from decouple import config
 import os
 from pathlib import Path
+from pickle import TRUE
+from django import conf
 import pymysql
 from datetime import timedelta
 
@@ -25,12 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY =config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('APP_DEBUG', True).lower() in ('true', 1, 't')
+DEBUG = config('APP_DEBUG', True)
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(' ')
+ALLOWED_HOSTS =config('ALLOWED_HOSTS').split(' ')
 
 # Application definition
 
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'activity',
+    'filemanager',
 
     #Third party app
     'django_extensions',
@@ -113,12 +116,12 @@ WSGI_APPLICATION = 'xzit.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.' + os.environ.get('DB_ENGINE', 'mysql'),
-        'NAME': os.environ.get('DB_NAME', 'hr_mediusware'),
-        'USER': os.environ.get('DB_USERNAME', 'root'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
+        'ENGINE': 'django.db.backends.' +config('DB_ENGINE', 'mysql'),
+        'NAME':config('DB_NAME', 'hr_mediusware'),
+        'USER':config('DB_USERNAME', 'root'),
+        'PASSWORD':config('DB_PASSWORD', ''),
+        'HOST':config('DB_HOST', 'localhost'),
+        'PORT':config('DB_PORT', '3306'),
     }
 }
 
@@ -149,7 +152,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = os.environ.get('APP_TIMEZONE')
+TIME_ZONE =config('APP_TIMEZONE')
 
 USE_I18N = True
 
@@ -159,7 +162,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = f"/{os.environ.get('STATIC_URL', 'static')}/"
-STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get('STATIC_URL', 'static'))
+STATIC_ROOT = os.path.join(BASE_DIR,config('STATIC_URL', 'static'))
 
 MEDIA_URL = f"/{os.environ.get('MEDIA_URL', 'media')}/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -169,11 +172,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST =config('EMAIL_HOST')
+EMAIL_PORT =config('EMAIL_PORT')
+EMAIL_HOST_USER =config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD =config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS').split(' ')
-CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS').split(' ')
+CORS_ALLOWED_ORIGINS =config('CORS_ALLOWED_ORIGINS').split(' ')
+CSRF_TRUSTED_ORIGINS =config('CSRF_TRUSTED_ORIGINS').split(' ')
