@@ -1,7 +1,7 @@
 from ast import arg
 from django.contrib import admin
 
-from activity.models import Post, PostLike
+from activity.models import Post, PostComment, PostLike
 
 # Register your models here.
 @admin.register(Post)
@@ -17,3 +17,7 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(PostLike)
 class PostLikeAdmin(admin.ModelAdmin):
        list_display = ['created_by', 'created_at']
+
+@admin.register(PostComment)
+class PostCommentAdmin(admin.ModelAdmin):
+       list_display = ['post', 'comment']
