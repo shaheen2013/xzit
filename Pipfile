@@ -19,6 +19,10 @@ uritemplate = "*"
 djangorestframework-simplejwt = "*"
 drf-yasg = "*"
 python-decouple = "*"
+django-allauth = "*"
+google-api-python-client = "*"
+facebook-sdk = "*"
+python-twitter = "*"
 
 [dev-packages]
 yapf = "*"

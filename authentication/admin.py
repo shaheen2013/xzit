@@ -12,7 +12,7 @@ from xzit import settings
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
-    list_display = ['username', 'name', 'email', 'created_at']
+    list_display = ['username', 'name', 'email', 'auth_provider', 'created_at']
     fieldsets = (
         (None, {
             'fields': ('username', 'name', 'password')
