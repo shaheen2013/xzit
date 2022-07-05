@@ -11,15 +11,13 @@ class FacebookSocialAuthSerializer(serializers.Serializer):
 
     def validate_auth_token(self, auth_token):
         user_data = facebook.Facebook.validate(auth_token)
-
+        
         try:
-            user_id = user_data['id']
             email = user_data['email']
             name = user_data['name']
             provider = 'facebook'
             return register_social_user(
                 provider=provider,
-                user_id=user_id,
                 email=email,
                 name=name
             )

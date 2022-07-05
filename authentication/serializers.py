@@ -6,11 +6,11 @@ from xzit.settings import AUTH_USER_MODEL
 class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('name', 'username', 'email', 'phone', 'password')
+        fields = ('name', 'username', 'email', 'phone', 'password', 'tokens')
         extra_kwargs = {
             'password' : { 'write_only' : True}
         }
-        
+      
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
