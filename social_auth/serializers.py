@@ -44,13 +44,12 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
 
             raise AuthenticationFailed('oops, who are you?')
 
-        user_id = user_data['sub']
         email = user_data['email']
         name = user_data['name']
         provider = 'google'
 
         return register_social_user(
-            provider=provider, user_id=user_id, email=email, name=name)
+            provider=provider, email=email, name=name)
 
 
 class TwitterAuthSerializer(serializers.Serializer):
@@ -67,7 +66,6 @@ class TwitterAuthSerializer(serializers.Serializer):
             access_token_key, access_token_secret)
 
         try:
-            user_id = user_info['id_str']
             email = user_info['email']
             name = user_info['name']
             provider = 'twitter'
@@ -77,4 +75,4 @@ class TwitterAuthSerializer(serializers.Serializer):
             )
 
         return register_social_user(
-            provider=provider, user_id=user_id, email=email, name=name)
+            provider=provider, email=email, name=name)
