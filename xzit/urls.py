@@ -46,9 +46,10 @@ urlpatterns = [
         'api/',
         include([
             path('auth/', include('authentication.urls')),
-             path('auth/social/', include(('social_auth.urls', 'social_auth'), namespace="social_auth")),
+            path('auth/social/', include(('social_auth.urls', 'social_auth'), namespace="social_auth")),
             path('', include('activity.urls')),
-            path('', include(router.urls))
+            path('', include('commerce.urls')),
+            path('', include(router.urls)),
         ]))
 ]
 

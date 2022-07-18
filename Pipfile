@@ -23,6 +23,7 @@ django-allauth = "*"
 google-api-python-client = "*"
 facebook-sdk = "*"
 python-twitter = "*"
+django-mptt = "*"
 
 [dev-packages]
 yapf = "*"

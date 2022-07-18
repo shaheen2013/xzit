@@ -46,12 +46,14 @@ INSTALLED_APPS = [
     'authentication',
     'activity',
     'filemanager',
+    'commerce',
 
     #Third party app
     'django_extensions',
     'rest_framework',
     'rest_framework_simplejwt',
-    'drf_yasg'
+    'drf_yasg',
+    'mptt'
 ]
 
 REST_FRAMEWORK = {
