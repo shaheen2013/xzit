@@ -9,7 +9,6 @@ AUTH_PROVIDERS = {'facebook': 'Facebook','google': 'Google', 'username': 'Userna
 
 
 class User(AbstractUser, TimeStampMixin):
-    name = models.CharField(max_length=255)
     email_verified_at = models.DateTimeField(auto_now_add=True)
     phone = models.CharField(max_length=40, null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True)
@@ -29,9 +28,13 @@ class User(AbstractUser, TimeStampMixin):
     business_name = models.CharField(max_length=255, null=True, blank=True)
     business_manager = models.CharField(max_length=255, null=True, blank=True)
     business_type = models.CharField(max_length=255, null=True, blank=True)
+    business_sub_type = models.CharField(max_length=255, null=True, blank=True)
     business_days = models.CharField(max_length=255, null=True, blank=True)
+    business_hours = models.CharField(max_length=255, null=True, blank=True)
     amenties = models.CharField(max_length=255, null=True, blank=True)
 
+    device_type = models.CharField(max_length=255, null=True, blank=True)
+    
     class Meta:
         db_table = 'users'
 

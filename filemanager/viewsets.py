@@ -14,4 +14,4 @@ class FileManagerViewSet(viewsets.ModelViewSet):
        
 
        def get_queryset(self):
-        return FileManager.objects.filter(created_by=self.request.user)
+        return FileManager.objects.filter(created_by=self.request.user.id)
