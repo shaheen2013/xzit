@@ -30,6 +30,7 @@ class Category(MPTTModel, TimeStampMixin):
 
 class Ad(AuthorMixin, TimeStampMixin):
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE)
+    #sub_category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     address = models.CharField(max_length=255)

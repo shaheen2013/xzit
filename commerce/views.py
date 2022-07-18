@@ -3,12 +3,14 @@ from rest_framework import status
 from commerce import serializers, models
 from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 
 
 class CategoryApiView(ModelViewSet):
     queryset = models.Category.objects.viewable()
     serializer_class = serializers.CategorySerializer
+    permission_classes = [IsAuthenticated]
 
     def retrieve(self, request, *args, **kwargs):
         instance = get_object_or_404(models.Category, id=kwargs.get('pk'))
@@ -19,9 +21,11 @@ class CategoryApiView(ModelViewSet):
 class AdApiView(ModelViewSet):
     queryset = models.Ad.objects.all()
     serializer_class = serializers.AdSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class AdBannerApiView(ModelViewSet):
     queryset = models.AdBanner.objects.all()
     serializer_class = serializers.AdBannerSerializer
+    permission_classes = [IsAuthenticated]
 
