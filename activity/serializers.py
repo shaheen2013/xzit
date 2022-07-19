@@ -3,6 +3,7 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from activity.models import Post, PostComment, PostLike, Story
 from authentication.serializers import RegistrationSerializer
+from django_q.tasks import async_task
 
 class PostSerializer(serializers.ModelSerializer):
     extra_kwargs = {
@@ -56,4 +57,11 @@ class StorySerializer(serializers.ModelSerializer):
     class Meta:
         model=Story
         fields=('id', 'story_type', 'media', 'story_time', 'created_by')
+        
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        async_task("activity.services.sleep_and_remove", obj=instance, hook="activity.services.hook_after_sleep")
+        
+        return instance
         

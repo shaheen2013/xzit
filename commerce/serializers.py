@@ -9,23 +9,23 @@ class RecursiveField(serializers.Serializer):
         return serializer.data
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class BusinessTypeSerializer(serializers.ModelSerializer):
     children = RecursiveField(many=True, read_only=True)
     parent = serializers.IntegerField(write_only=True, required=False)
 
     class Meta:
-        model = models.Category
-        fields = ('id', 'category_name', 'category_image', 'children', 'parent')
+        model = models.BusinessType
+        fields = ('id', 'name', 'children', 'parent')
 
     def create(self, validated_data):
         parent = validated_data.get('parent')
         if parent:
             validated_data.pop('parent')
-        instance = models.Category.objects.create(**validated_data)
+        instance = models.BusinessType.objects.create(**validated_data)
         instance.save()
         if parent:
             try:
-                instance.parent = models.Category.objects.get(id=parent)
+                instance.parent = models.BusinessType.objects.get(id=parent)
                 instance.save()
             except:
                 pass
@@ -34,13 +34,12 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         parent = validated_data.get('parent')
-        instance.category_name = validated_data.get('category_name', instance.category_name)
-        instance.category_image = validated_data.get('category_image', instance.category_image)
+        instance.name = validated_data.get('name', instance.name)
         instance.save()
 
         if parent:
             try:
-                instance.parent = models.Category.objects.get(id=parent)
+                instance.parent = models.BusinessType.objects.get(id=parent)
                 instance.save()
             except:
                 pass
@@ -67,9 +66,6 @@ class AdBannerImageSerializer(serializers.ModelSerializer):
 
 class AdBannerSerializer(serializers.ModelSerializer):
     ad_banner_images = AdBannerImageShowSerializer(many=True)
-
-    # ad = AdSerializer()
-
     class Meta:
         model = models.AdBanner
         fields = ('id', 'ad', 'ratio', 'ad_banner_images')

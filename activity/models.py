@@ -38,7 +38,11 @@ class PostSave(TimeStampMixin, AuthorMixin):
               
               
 class Story(TimeStampMixin, AuthorMixin):
-       story_type = models.CharField(max_length=255, blank=True, default="image")
+       TYPE_CHOICES = (
+              ('image', 'Image'),
+              ('video', 'Video')
+       )
+       story_type = models.CharField(max_length=10, default=TYPE_CHOICES[1], choices=TYPE_CHOICES)
        media = models.CharField(max_length=255, null=True, blank=True)
        view = models.CharField(max_length = 255, null=True, blank=True)
        views_count = models.IntegerField(default=0)

@@ -8,6 +8,6 @@ urlpatterns = [
     path('posts/interection/', views.PostInterectionCreateAPIView.as_view()),
     path('posts/comment/', views.PostCommentAPIView.as_view()),
     path('posts/<int:post_id>/comments/', views.PostCommentsAPIView.as_view()),
-    path('stories/', views.StoryCreateAPIView.as_view()),
+    path('stories/', views.StoryListCreateAPIView.as_view()),
     path('stories/<int:id>/', views.StoryRetrieveUpdateDeleteAPIView.as_view())
 ]

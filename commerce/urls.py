@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from commerce import views
 
 router = DefaultRouter()
-router.register(r'category', views.CategoryApiView, basename='category')
+# router.register(r'business-type', views.BusinessTypeApiView, basename='business_type')
 router.register(r'ad', views.AdApiView, basename='ad')
 router.register(r'ad-banner', views.AdBannerApiView, basename='ad_banner')
 

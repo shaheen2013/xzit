@@ -8,29 +8,28 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class CategoryManager(TreeManager):
+class BusinessTypeManager(TreeManager):
     def viewable(self):
         queryset = self.get_queryset().filter(level=0)
         return queryset
 
 
-class Category(MPTTModel, TimeStampMixin):
-    category_name = models.CharField(max_length=255)
-    category_image = models.CharField(max_length=255, blank=True, null=True)
+class BusinessType(MPTTModel, TimeStampMixin):
+    name = models.CharField(max_length=255)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='children')
 
-    objects = CategoryManager()
+    objects = BusinessTypeManager()
 
     def __str__(self):
-        return self.category_name
+        return self.name
 
     class Meta:
-        db_table = "categories"
+        db_table = "business_types"
 
 
 class Ad(AuthorMixin, TimeStampMixin):
-    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE)
-    #sub_category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE)
+    business_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE)
+    #business_sub_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     address = models.CharField(max_length=255)

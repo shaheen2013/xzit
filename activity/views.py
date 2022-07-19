@@ -1,16 +1,20 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import generics
+from yaml import serialize
 from activity.models import Post, PostComment, PostLike, Story
 from activity import serializers
 from rest_framework.permissions import IsAuthenticated
 from xzit.mixins.models import CustomPagination
+from datetime import timedelta
+from django.utils import timezone
 
 """ 
-       Activity - Post
-       - Crate Post
-       - View Post
-       - Update Post
-       - Delete Post
+Activity - Post
+- Crate Post
+- View Post
+- Update Post
+- Delete Post
 """
 class PostListApiView(generics.CreateAPIView):
     serializer_class = serializers.PostSerializer
@@ -64,7 +68,7 @@ class PostCommentsAPIView(generics.ListAPIView):
        - Update Story
        - Delete Story
 """
-class StoryCreateAPIView(generics.CreateAPIView):
+class StoryListCreateAPIView(generics.ListCreateAPIView):
     """
     New Story Create
     """
@@ -84,3 +88,11 @@ class StoryRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Story.objects.filter(created_by=self.request.user)
+    
+    
+def removeStories(request):
+    lastHour = timezone.now() - timedelta(hours=1)
+    stories = Story.objects.filter(created_at__gte=lastHour).values()
+    stories = list(stories)
+    
+    return JsonResponse(stories, safe=False)

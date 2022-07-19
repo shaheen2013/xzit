@@ -24,6 +24,8 @@ google-api-python-client = "*"
 facebook-sdk = "*"
 python-twitter = "*"
 django-mptt = "*"
+django-q = "*"
+redis = "*"
 
 [dev-packages]
 yapf = "*"

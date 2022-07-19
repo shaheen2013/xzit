@@ -27,12 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY =config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('APP_DEBUG', True)
 
-ALLOWED_HOSTS =config('ALLOWED_HOSTS').split(' ')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(' ')
 
 # Application definition
 
@@ -48,12 +48,13 @@ INSTALLED_APPS = [
     'filemanager',
     'commerce',
 
-    #Third party app
+    # Third party app
     'django_extensions',
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
-    'mptt'
+    'mptt',
+    'django_q',
 ]
 
 REST_FRAMEWORK = {
@@ -66,17 +67,17 @@ SIMPLE_JWT = {
 }
 
 SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {
-    #   'Basic': {
-    #         'type': 'basic'
-    #   },
-      'Bearer': {
+    'SECURITY_DEFINITIONS': {
+        #   'Basic': {
+        #         'type': 'basic'
+        #   },
+        'Bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header'
-      }
-   },
-   'USE_SESSION_AUTH': False
+        }
+    },
+    'USE_SESSION_AUTH': False
 }
 
 MIDDLEWARE = [
@@ -118,12 +119,12 @@ WSGI_APPLICATION = 'xzit.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.' +config('DB_ENGINE', 'mysql'),
-        'NAME':config('DB_NAME', 'hr_mediusware'),
-        'USER':config('DB_USERNAME', 'root'),
-        'PASSWORD':config('DB_PASSWORD', ''),
-        'HOST':config('DB_HOST', 'localhost'),
-        'PORT':config('DB_PORT', '3306'),
+        'ENGINE': 'django.db.backends.' + config('DB_ENGINE', 'mysql'),
+        'NAME': config('DB_NAME', 'hr_mediusware'),
+        'USER': config('DB_USERNAME', 'root'),
+        'PASSWORD': config('DB_PASSWORD', ''),
+        'HOST': config('DB_HOST', 'localhost'),
+        'PORT': config('DB_PORT', '3306'),
     }
 }
 
@@ -154,7 +155,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE =config('APP_TIMEZONE')
+TIME_ZONE = config('APP_TIMEZONE')
 
 USE_I18N = True
 
@@ -164,7 +165,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = f"/{os.environ.get('STATIC_URL', 'static')}/"
-STATIC_ROOT = os.path.join(BASE_DIR,config('STATIC_URL', 'static'))
+STATIC_ROOT = os.path.join(BASE_DIR, config('STATIC_URL', 'static'))
 
 MEDIA_URL = f"/{os.environ.get('MEDIA_URL', 'media')}/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -174,11 +175,30 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_HOST =config('EMAIL_HOST')
-EMAIL_PORT =config('EMAIL_PORT')
-EMAIL_HOST_USER =config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD =config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
-CORS_ALLOWED_ORIGINS =config('CORS_ALLOWED_ORIGINS').split(' ')
-CSRF_TRUSTED_ORIGINS =config('CSRF_TRUSTED_ORIGINS').split(' ')
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS').split(' ')
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS').split(' ')
+
+
+Q_CLUSTER = {
+    'name': 'xzit',
+    'workers': 8,
+    'recycle': 500,
+    'timeout': 60,
+    'compress': True,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'cpu_affinity': 1,
+    'label': 'Django Q',
+    'redis': {
+        'host': config('REDIS_HOST', '127.0.0.1'),
+        'port': config('REDIS_PORT', 6379),
+        'password': config('REDIS_PASSWORD', ''),
+        'db': config('REDISH_DB', 0),
+    }
+}
