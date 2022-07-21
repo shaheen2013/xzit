@@ -2,7 +2,6 @@ from genericpath import exists
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from activity.models import Post, PostComment, PostLike, Story
-from authentication.serializers import RegistrationSerializer
 from django_q.tasks import async_task
 
 class PostSerializer(serializers.ModelSerializer):

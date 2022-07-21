@@ -1,22 +1,54 @@
+from unicodedata import name
 from rest_framework import serializers
-
 from authentication.models import User
-from xzit.settings import AUTH_USER_MODEL
+from django.contrib.auth.models import Group
 
-class RegistrationSerializer(serializers.ModelSerializer):
+class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name','username', 'email', 'phone', 'password', 'tokens', 'business_days', 'business_hours', 'business_type', 'business_sub_type', 'device_type')
+        fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'password', 'tokens')
         extra_kwargs = {
-            'password' : { 'write_only' : True}
-        }
-      
+                'password' : { 'write_only' : True}
+            }
+        
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
-        
         if password is not None:
             instance.set_password(password)
         instance.save()
         
+        # Add Group 
+        user_group, created = Group.objects.get_or_create(name='user')
+        user_group.user_set.add(instance)
         return instance
+        
+class UserBasicInfoUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('age', 'gender', 'country', 'city')
+
+
+class MerchantRegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'password', 'tokens')
+        extra_kwargs = {
+                'password' : { 'write_only' : True}
+            }
+        
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        # Add group
+        merchant_group, created = Group.objects.get_or_create(name='merchant')
+        instance.groups.add(merchant_group.id)
+        return instance
+            
+class MerchantBasicInfoUpdateSerializer(serializers.ModelSerializer):
+     class Meta:
+        model = User
+        fields = ('business_name', 'business_manager', 'business_type', 'business_address', 'country','city', 'bio', 'amenties')

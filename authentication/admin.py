@@ -1,14 +1,8 @@
 from re import A
 from django.contrib import admin
-from django import forms
-from django.contrib.auth import hashers
 from django.contrib.auth.admin import UserAdmin
 
 from authentication.models import User
-
-# Register your models here.
-from xzit import settings
-
 
 @admin.register(User)
 class UserAdmin(UserAdmin):

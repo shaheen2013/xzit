@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -9,12 +10,17 @@ AUTH_PROVIDERS = {'facebook': 'Facebook','google': 'Google', 'username': 'Userna
 
 
 class User(AbstractUser, TimeStampMixin):
+    GENDER = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+    )
     email_verified_at = models.DateTimeField(auto_now_add=True)
     phone = models.CharField(max_length=40, null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True)
     cover_image = models.ImageField(null=True, blank=True)
-    gender = models.CharField(max_length=255, null=True, blank=True)
+    gender = models.CharField(max_length=2, choices=GENDER, blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
+    age = models.IntegerField(blank=True, null=True)
 
     auth_provider = models.CharField(
         max_length=255, blank=False, null=False, default=AUTH_PROVIDERS.get('username'))
@@ -31,7 +37,13 @@ class User(AbstractUser, TimeStampMixin):
     business_sub_type = models.CharField(max_length=255, null=True, blank=True)
     business_days = models.CharField(max_length=255, null=True, blank=True)
     business_hours = models.CharField(max_length=255, null=True, blank=True)
+    business_address = models.TextField(null=True, blank=True)
+    
+    bio = models.TextField(null=True, blank=True)
+    
     amenties = models.CharField(max_length=255, null=True, blank=True)
+    
+    
 
     device_type = models.CharField(max_length=255, null=True, blank=True)
     
