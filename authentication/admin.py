@@ -6,7 +6,7 @@ from authentication.models import User
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
-    list_display = ['username', 'email', 'auth_provider', 'created_at']
+    list_display = ['first_name', 'email', 'auth_provider',  'is_staff', 'role','created_at']
     fieldsets = (
         (None, {
             'fields': ('username', 'password')
@@ -33,9 +33,3 @@ class UserAdmin(UserAdmin):
         }),
     )
 
-    # def save_model(self, request, obj, form, change):
-    #     try:
-    #         super(UserAdmin, self).save_model(request, obj, form, change)
-    #     except:
-    #         obj.password = hashers.make_password(request.POST['password'])
-    #         super(UserAdmin, self).save_model(request, obj, form, change)

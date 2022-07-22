@@ -24,7 +24,7 @@ class AdApiView(ModelViewSet):
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        return models.Ad.objects.filter(created_by=self.request.user)
+        return models.Ad.objects.filter(created_by=self.request.user.id)
 
 
 class AdBannerApiView(ModelViewSet):

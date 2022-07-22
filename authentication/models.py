@@ -43,8 +43,6 @@ class User(AbstractUser, TimeStampMixin):
     
     amenties = models.CharField(max_length=255, null=True, blank=True)
     
-    
-
     device_type = models.CharField(max_length=255, null=True, blank=True)
     
     class Meta:
@@ -56,6 +54,13 @@ class User(AbstractUser, TimeStampMixin):
             'refresh': str(refresh),
             'access': str(refresh.access_token)
         }
+        
+        
+    def role(self):
+        group = self.groups.first()
+        if group is not None:
+            return group.name
+        return 'No Role'
 
 # TODO: I will pick the architecture down bellow.
 #  i always like to break db tables as many pices as possible for better performance
