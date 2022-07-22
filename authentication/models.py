@@ -2,9 +2,11 @@ from pyexpat import model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from rest_framework_simplejwt.tokens import RefreshToken
-
-# Create your models here.
 from xzit.mixins.models import TimeStampMixin
+from django.dispatch import receiver
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
+from django.core.mail import send_mail
 
 AUTH_PROVIDERS = {'facebook': 'Facebook','google': 'Google', 'username': 'Username'}
 
@@ -15,6 +17,10 @@ class User(AbstractUser, TimeStampMixin):
         ('F', 'Female'),
     )
     email_verified_at = models.DateTimeField(auto_now_add=True)
+    
+    is_verified = models.BooleanField(default=False)
+    otp = models.CharField(max_length=10, null=True, blank=True)
+    
     phone = models.CharField(max_length=40, null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True)
     cover_image = models.ImageField(null=True, blank=True)
@@ -62,6 +68,20 @@ class User(AbstractUser, TimeStampMixin):
             return group.name
         return 'No Role'
 
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+    email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
+    send_mail(
+        # title:
+        "Password Reset for {title}".format(title="XZIT Backend"),
+        # message:
+        email_plaintext_message,
+        # from:
+        "noreply@somehost.local",
+        # to:
+        [reset_password_token.user.email]
+    )
 # TODO: I will pick the architecture down bellow.
 #  i always like to break db tables as many pices as possible for better performance
 #  but i had to follow the previous dev work for design the db otherwise

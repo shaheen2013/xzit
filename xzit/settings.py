@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'mptt',
     'django_q',
+    'django_rest_passwordreset',
 ]
 
 REST_FRAMEWORK = {
@@ -175,6 +176,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
@@ -202,3 +205,4 @@ Q_CLUSTER = {
         'db': config('REDISH_DB', 0),
     }
 }
+

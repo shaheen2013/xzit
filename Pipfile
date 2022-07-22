@@ -26,6 +26,7 @@ python-twitter = "*"
 django-mptt = "*"
 django-q = "*"
 redis = "*"
+django-rest-passwordreset = "*"
 
 [dev-packages]
 yapf = "*"
