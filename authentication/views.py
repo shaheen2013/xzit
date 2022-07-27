@@ -82,10 +82,12 @@ class OtpVerifyApiView(generics.GenericAPIView):
                 return Response({'details': 'User not found !'})
             if serialize.data.get('otp') != user.otp:
                 return Response({'details' : 'OTP does not match. Please try valid OTP.'}, 400)
-            
+            if user.is_verified:
+                return Response({'details' : 'You are already verified.'}, 200)
             user.is_verified = True 
             user.save()
-            return Response({'details': 'Congratulations! Your OTP has been verified.'})
+            login_details = serializers.LoginSuccessSerializer(user).data 
+            return Response({'message': 'Congratulations! Your OTP has been verified.', 'login_details' : login_details}, 200)
             
         return Response({'details': 'Invalid data'}, 400)
         
