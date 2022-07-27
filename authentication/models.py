@@ -61,6 +61,9 @@ class User(AbstractUser, TimeStampMixin):
             'access': str(refresh.access_token)
         }
         
+    def name(self):
+        return f"{self.first_name} {self.last_name}" 
+        
         
     def role(self):
         group = self.groups.first()

@@ -1,3 +1,4 @@
+from httplib2 import Response
 from rest_framework import serializers
 from authentication.models import User
 from django.contrib.auth.models import Group
@@ -65,3 +66,21 @@ class ChangePasswordSerializer(serializers.Serializer):
     
     old_password = serializers.CharField()
     new_password = serializers.CharField()
+    
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+        
+class LoginSuccessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User 
+        fields = ('id', 'name', 'username', 'email', 'role', 'tokens')
+
+class OtpResendSerialize(serializers.Serializer):
+    user = serializers.IntegerField()
+      
+class OtpVerifySerializer(serializers.Serializer):
+    user = serializers.IntegerField()
+    otp = serializers.CharField()
+    
