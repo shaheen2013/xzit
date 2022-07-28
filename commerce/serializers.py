@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from commerce import models
-from django.shortcuts import get_object_or_404
-
+from common.models import Report
 
 class RecursiveField(serializers.Serializer):
     def to_representation(self, value):
@@ -81,4 +80,15 @@ class AdBannerSerializer(serializers.ModelSerializer):
             obj = models.AdBannerImage.objects.create(path=img.get('path'), ad_banner=instance)
             obj.save()
 
+        return instance
+    
+class AdReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ('reason', 'ad')
+        
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.report_type = "Ad"
+        instance.save()
         return instance

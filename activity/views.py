@@ -5,6 +5,7 @@ from yaml import serialize
 from activity.models import Post, PostComment, PostLike, Story
 from activity import serializers
 from rest_framework.permissions import IsAuthenticated
+from common.models import Report
 from xzit.mixins.models import CustomPagination
 from datetime import timedelta
 from django.utils import timezone
@@ -15,6 +16,7 @@ Activity - Post
 - View Post
 - Update Post
 - Delete Post
+- Report Post
 """
 class PostListApiView(generics.CreateAPIView):
     serializer_class = serializers.PostSerializer
@@ -57,9 +59,18 @@ class PostCommentsAPIView(generics.ListAPIView):
        serializer_class = serializers.PostCommentSerializer
        lookup_field= 'post_id'
        queryset = PostComment
+       permission_classes = [IsAuthenticated]
 
        def get_queryset(self):
            return PostComment.objects.filter(post_id=self.kwargs['post_id'])
+       
+class PostReportApiView(generics.CreateAPIView):
+    """
+        Report to post
+    """
+    serializer_class = serializers.PostReportSerializer
+    queryset = Report
+    permission_classes = [IsAuthenticated]
 
 """ 
        Activity - Story 
@@ -88,7 +99,15 @@ class StoryRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Story.objects.filter(created_by=self.request.user)
-    
+ 
+class StoryReportApiView(generics.CreateAPIView):
+    """
+        Report to Story
+    """
+    serializer_class = serializers.StoryReportSerializer
+    queryset = Report
+    permission_classes = [IsAuthenticated]
+       
     
 def removeStories(request):
     lastHour = timezone.now() - timedelta(hours=1)
@@ -96,3 +115,4 @@ def removeStories(request):
     stories = list(stories)
     
     return JsonResponse(stories, safe=False)
+

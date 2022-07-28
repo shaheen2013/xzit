@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'activity',
     'filemanager',
     'commerce',
+    'common',
 
     # Third party app
     'django_extensions',

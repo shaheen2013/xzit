@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from activity.models import Post, PostComment, PostLike, Story
 from django_q.tasks import async_task
 
+from common.models import Report
+
 class PostSerializer(serializers.ModelSerializer):
     extra_kwargs = {
         'id': {'read_only' : True},
@@ -63,4 +65,28 @@ class StorySerializer(serializers.ModelSerializer):
         async_task("activity.services.sleep_and_remove", obj=instance, hook="activity.services.hook_after_sleep")
         
         return instance
+    
+class PostReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ('reason', 'post')
+        
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.report_type = "Post"
+        instance.save()
+        return instance
+    
+class StoryReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ('reason', 'story')
+        
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.report_type = "Story"
+        instance.save()
+        return instance
+        
+        
         
