@@ -93,13 +93,11 @@ class AdInvitation(TimeStampMixin):
     referrer_id = models.CharField(max_length=20)
     invited_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='invited')
     invited_to = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='inviting')
-    invitation_date = models.CharField(max_length=255)
-    invitation_time = models.CharField(max_length=255)
-    status = models.CharField(max_length=20, choices=STATUS)
-    seen = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=STATUS, default='Pending')
+    seen_at = models.DateTimeField(null=True, blank=True, auto_now=False)
 
     def __str__(self):
-        return self.ad.title
+        return self.invited_to.name
 
     class Meta:
         db_table = "ad_invitations"

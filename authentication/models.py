@@ -61,7 +61,7 @@ class User(AbstractUser, TimeStampMixin):
             'access': str(refresh.access_token)
         }
         
-        
+   
     def role(self):
         group = self.groups.first()
         if group is not None:

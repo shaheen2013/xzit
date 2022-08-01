@@ -44,7 +44,16 @@ class BusinessTypeSerializer(serializers.ModelSerializer):
                 pass
         return instance
 
+class GetBusinessTypesSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = models.BusinessType
+        fields = ('id', 'name')
 
+    def list(self, request, *args, **kwargs):
+        pass
+        
+    
 class AdSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Ad
@@ -92,3 +101,13 @@ class AdReportSerializer(serializers.ModelSerializer):
         instance.report_type = "Ad"
         instance.save()
         return instance
+    
+class InviteSerializer(serializers.ModelSerializer):
+    
+    extra_kwargs = {
+        'referrer_id': {'read_only' : True},
+        'invited_by': {'read_only': True}
+    }
+    class Meta:
+        model = models.AdInvitation
+        fields  = ['ad', 'invited_to']
