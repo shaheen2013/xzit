@@ -20,8 +20,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         # OTP Send
-        if instance.email:
-            send_otp(instance.email)
+        if instance.email is not None:
+            send_otp(instance.email, instance)
         # Add Group 
         user_group, created = Group.objects.get_or_create(name='user')
         user_group.user_set.add(instance)
