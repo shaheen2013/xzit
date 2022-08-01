@@ -6,6 +6,7 @@ def send_otp(email, user):
        subject = 'Your account verification email'
        otp = random.randint(100000, 999999)
        user.otp = otp
+       user.is_verified = False
        user.save()
        message = f'Your otp is {otp}'
        email_from = settings.EMAIL_HOST 

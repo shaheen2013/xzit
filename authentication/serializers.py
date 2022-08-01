@@ -1,3 +1,4 @@
+from httplib2 import Response
 from rest_framework import serializers
 from authentication.models import User
 from django.contrib.auth.models import Group
@@ -19,8 +20,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         # OTP Send
-        if instance.email:
-            send_otp(instance.email)
+        if instance.email is not None:
+            send_otp(instance.email, instance)
         # Add Group 
         user_group, created = Group.objects.get_or_create(name='user')
         user_group.user_set.add(instance)
@@ -65,3 +66,21 @@ class ChangePasswordSerializer(serializers.Serializer):
     
     old_password = serializers.CharField()
     new_password = serializers.CharField()
+    
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+        
+class LoginSuccessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User 
+        fields = ('id', 'name', 'username', 'email', 'role', 'tokens')
+
+class OtpResendSerialize(serializers.Serializer):
+    user = serializers.IntegerField()
+      
+class OtpVerifySerializer(serializers.Serializer):
+    user = serializers.IntegerField()
+    otp = serializers.CharField()
+    
