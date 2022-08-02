@@ -97,8 +97,14 @@ class AdInvitation(TimeStampMixin):
     seen_at = models.DateTimeField(null=True, blank=True, auto_now=False)
 
     def __str__(self):
-        return self.invited_to.name
+        return self.invited_to.name()
 
+    def seen(self):
+        if self.seen_at is None:
+            return False 
+        else:
+            return True
+        
     class Meta:
         db_table = "ad_invitations"
 

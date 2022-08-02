@@ -102,7 +102,7 @@ class AdReportSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
-class InviteSerializer(serializers.ModelSerializer):
+class CreateInviteSerializer(serializers.ModelSerializer):
     
     extra_kwargs = {
         'referrer_id': {'read_only' : True},
@@ -111,3 +111,25 @@ class InviteSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AdInvitation
         fields  = ['ad', 'invited_to']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request is not None: 
+            user = request.user 
+            validated_data['invited_by'] = user 
+            validated_data['referrer_id'] = user.id 
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return instance
+
+class AdInvitationListSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = models.AdInvitation
+        fields = "__all__"
+
+class InviteDetailSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = models.AdInvitation
+        
