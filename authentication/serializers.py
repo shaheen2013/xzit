@@ -37,7 +37,7 @@ class UserBasicInfoUpdateSerializer(serializers.ModelSerializer):
 class MerchantRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'password', 'tokens')
+        fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'password', 'tokens', 'otp')
         extra_kwargs = {
                 'password' : { 'write_only' : True},
                 'otp' : { 'read_only' : True}
