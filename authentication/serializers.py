@@ -8,9 +8,10 @@ from xzit.emails import send_otp
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'password', 'tokens')
+        fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'password', 'tokens', 'otp')
         extra_kwargs = {
-                'password' : { 'write_only' : True}
+                'password' : { 'write_only' : True},
+                'otp':  { 'read_only' : True}
             }
         
     def create(self, validated_data):
@@ -21,7 +22,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         instance.save()
         # OTP Send
         if instance.email is not None:
-            send_otp(instance.email, instance)
+            send_otp(instance.email, instance) 
         # Add Group 
         user_group, created = Group.objects.get_or_create(name='user')
         user_group.user_set.add(instance)
@@ -38,7 +39,8 @@ class MerchantRegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'password', 'tokens')
         extra_kwargs = {
-                'password' : { 'write_only' : True}
+                'password' : { 'write_only' : True},
+                'otp' : { 'read_only' : True}
             }
         
     def create(self, validated_data):
