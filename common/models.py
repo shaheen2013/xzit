@@ -1,4 +1,3 @@
-from tkinter import CASCADE
 from django.db import models
 from activity.models import Post, Story
 from authentication.models import User
@@ -22,4 +21,10 @@ class Report(TimeStampMixin, AuthorMixin):
        
        class Meta:
               db_table = "reports"
+       
+
+class SavePostAd(TimeStampMixin, AuthorMixin):
+       post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
+       ad = models.ForeignKey(Ad, on_delete=models.CASCADE, blank=True, null=True)
+       
        
