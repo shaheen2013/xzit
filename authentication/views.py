@@ -115,3 +115,7 @@ class Login(generics.GenericAPIView):
         
         response.data = serializers.LoginSuccessSerializer(user).data
         return response
+    
+class AccountVerifyApiView(generics.CreateAPIView):
+    serializer_class = serializers.AccountVerificationSerializer 
+    queryset = User.objects.all()

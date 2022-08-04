@@ -1,4 +1,4 @@
-from httplib2 import Response
+from rest_framework.response import Response
 from rest_framework import serializers
 from authentication.models import User
 from django.contrib.auth.models import Group
@@ -88,3 +88,18 @@ class OtpVerifySerializer(serializers.Serializer):
     user = serializers.IntegerField()
     otp = serializers.CharField()
     
+class AccountVerificationSerializer(serializers.ModelSerializer):
+    
+    class Meta: 
+        model = User
+        fields = ('email', )
+    
+    def create(self, validated_data):
+        email = validated_data['email']
+        if self.Meta.model.objects.filter(email=email).exists():
+            user = User.objects.filter(email=email).first()  
+            send_otp(email, user)
+            return user
+     
+        return Response({"details" : "User not found !"}, 404)
+        
