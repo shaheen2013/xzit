@@ -100,6 +100,4 @@ class AccountVerificationSerializer(serializers.ModelSerializer):
             user = User.objects.filter(email=email).first()  
             send_otp(email, user)
             return user
-     
-        return Response({"details" : "User not found !"}, 404)
         
