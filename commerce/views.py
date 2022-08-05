@@ -1,3 +1,4 @@
+from requests import request
 from rest_framework.response import Response
 from rest_framework import status
 from commerce import serializers, models
@@ -83,6 +84,53 @@ class AdSendedInvitationListApiView(ListAPIView):
         return models.AdInvitation.objects.filter(invited_by=self.request.user)
     
     
+    """********************************************************************************************
+                                                    Reservation 
+    *********************************************************************************************"""
+class ReservationCreateApiView(CreateAPIView):
+    """ 
+        Create a reservation
+    """
+    serializer_class = serializers.ReservationCreateSerializer
+    permission_classes = [IsAuthenticated]
+class UserReservationListApiView(ListAPIView):
+    """ 
+        User reservation list
+    """
+    serializer_class = serializers.UserReservationListSerializer
+    permission_classes = [IsAuthenticated]
     
+    def get_queryset(self):
+        return models.Reservation.objects.filter(created_by=self.request.user.id)
+    
+class ReservationDetailApiView(RetrieveAPIView):
+    """ 
+        Reservation details. 
+    """
+    
+    serializer_class = serializers.ReservationSerializer
+    lookup_field = "id"
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return models.Reservation.objects.filter(created_by=self.request.user.id)
+    
+class ReservationUpdateApiView(UpdateAPIView):
+    """ 
+        Reservation Update. 
+    """
+    
+    serializer_class = serializers.ReservationUpdateSerializer
+    queryset = models.Reservation.objects.all()
+    lookup_field = "id"
+    
+class MerchantReservationListApiView(ListAPIView):
+    """ 
+    Reservations list for merchant
+    """
+    serializer_class = serializers.ReservationSerializer
+    
+    def get_queryset(self):
+        return models.Reservation.objects.filter(created_by=self.request.user.id)
     
 

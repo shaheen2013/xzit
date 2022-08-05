@@ -15,5 +15,10 @@ urlpatterns = [
     path('business-types/', views.GetBussinessTypeApiView.as_view()),
     path('business-types/<int:id>', views.SingleBusinessTypeApiView.as_view()),
     path('ad/report/', views.AdReportApiView.as_view()),
+    path('reservations/create/', views.ReservationCreateApiView.as_view()),
+    path('reservations/user/', views.UserReservationListApiView.as_view()),
+    path('reservations/merchant/', views.MerchantReservationListApiView.as_view()),
+    path('reservations/<int:id>/', views.ReservationDetailApiView.as_view()),
+    path('reservations/<int:id>/update/', views.ReservationUpdateApiView.as_view()),
     path('', include(router.urls)),
 ]

@@ -132,4 +132,40 @@ class InviteDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.AdInvitation
+    
+    
+class ReservationSerializer(serializers.ModelSerializer):
+    status = serializers.BooleanField(initial=False)
+    extra_kwargs = {
+        'number_of_accepted': {'read_only' : True}
+    }
+    class Meta: 
+        model = models.Reservation
+        fields = ('id','ad', 'date', 'service', 'time', 'table', 'table_duration', 'status', 'guest')
         
+class ReservationCreateSerializer(ReservationSerializer):
+    extra_kwargs = {
+        'created_at': {'read_only' : True},
+        'created_by': {'read_only': True},
+        'status': {'read_only': True}
+    }
+class UserReservationListSerializer(ReservationSerializer):
+    extra_kwargs = {
+        'created_at': {'read_only' : True},
+        'created_by': {'read_only': True},
+        'status': {'read_only': True},
+    } 
+
+class ReservationDetailsSerializer(ReservationSerializer):
+    extra_kwargs = {
+        'created_at': {'read_only' : True},
+        'created_by': {'read_only': True}
+    } 
+    
+class ReservationUpdateSerializer(ReservationSerializer):
+    extra_kwargs = {
+        'created_at': {'read_only' : True},
+        'created_by': {'read_only': True },
+        'status' : { 'read_only' : True },
+        'service' : { 'read_only' : True },
+    }
