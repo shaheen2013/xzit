@@ -119,3 +119,13 @@ class Login(generics.GenericAPIView):
 class AccountVerifyApiView(generics.CreateAPIView):
     serializer_class = serializers.AccountVerificationSerializer 
     queryset = User.objects.all()
+    
+class BusinessTypeSaveApiView(generics.UpdateAPIView):
+    serializer_class = serializers.BusinessTypeSaveSerializer
+    queryset = User.objects.all()
+    lookup_field = "id"
+    
+class BusinessSubTypeSaveApiView(generics.UpdateAPIView):
+    serializer_class = serializers.BusinessSubTypeSaveSerializer
+    queryset = User.objects.all()
+    lookup_field = "id"
