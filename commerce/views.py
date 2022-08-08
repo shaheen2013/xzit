@@ -6,6 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from authentication.models import User
 
 class BusinessTypeApiView(ModelViewSet):
     queryset = models.BusinessType.objects.viewable()
@@ -115,22 +116,49 @@ class ReservationDetailApiView(RetrieveAPIView):
     def get_queryset(self):
         return models.Reservation.objects.filter(created_by=self.request.user.id)
     
-class ReservationUpdateApiView(UpdateAPIView):
+class ReservationUserUpdateApiView(UpdateAPIView):
     """ 
         Reservation Update. 
     """
     
     serializer_class = serializers.ReservationUpdateSerializer
+    lookup_field = "id"
+    queryset = models.Reservation.objects.all()
+    permission_classes = [IsAuthenticated]
+    
+    def update(self, request, *args, **kwargs):
+        reservation = get_object_or_404(models.Reservation, id=kwargs.get("id"))
+        if request.user.id != reservation.created_by_id:
+            return Response({ "details": "You have no permission to update this"}, 400)
+        
+        return super().update(request, *args, **kwargs)
+    
+    
+class ReservationMerchantUpdateApiView(UpdateAPIView):
+    """ 
+        Reservation Update. 
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.ReservationUpdateSerializer
     queryset = models.Reservation.objects.all()
     lookup_field = "id"
+    
+    def patch(self, request, *args, **kwargs):
+        reservation = get_object_or_404(models.Reservation, id=kwargs.get("id"))
+        ad = reservation.ad 
+        if ad.created_by_id != request.user.id:
+            return Response({ "details": "You have no permission to update this"}, 403)
+        return super().partial_update(request, *args, **kwargs)
     
 class MerchantReservationListApiView(ListAPIView):
     """ 
     Reservations list for merchant
     """
     serializer_class = serializers.ReservationSerializer
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        return models.Reservation.objects.filter(created_by=self.request.user.id)
+        ads = models.Ad.objects.filter(created_by_id__pk=self.request.user.id) 
+        return models.Reservation.objects.filter(ad__in=ads)
     
 

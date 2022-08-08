@@ -83,6 +83,8 @@ class Reservation(AuthorMixin, TimeStampMixin):
     
     def ad_titile(self):
         return self.ad.title
+    
+    
 
 class AdBanner(TimeStampMixin):
     ad = models.ForeignKey(Ad, on_delete=models.CASCADE)

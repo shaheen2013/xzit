@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from commerce import models
 from common.models import Report
+from rest_framework.response import Response
 
 class RecursiveField(serializers.Serializer):
     def to_representation(self, value):
@@ -136,8 +137,10 @@ class InviteDetailSerializer(serializers.ModelSerializer):
     
 class ReservationSerializer(serializers.ModelSerializer):
     status = serializers.BooleanField(initial=False)
+
     extra_kwargs = {
-        'number_of_accepted': {'read_only' : True}
+        'number_of_accepted': {'read_only' : True},
+        'ad_details': {'read_only' : True},
     }
     class Meta: 
         model = models.Reservation
@@ -165,7 +168,5 @@ class ReservationDetailsSerializer(ReservationSerializer):
 class ReservationUpdateSerializer(ReservationSerializer):
     extra_kwargs = {
         'created_at': {'read_only' : True},
-        'created_by': {'read_only': True },
-        'status' : { 'read_only' : True },
-        'service' : { 'read_only' : True },
+        'created_by': {'read_only': True }
     }
