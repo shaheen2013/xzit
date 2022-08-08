@@ -52,6 +52,7 @@ urlpatterns = [
             path('', include('activity.urls')),
             path('', include('commerce.urls')),
             path('', include(router.urls)),
+            path('', include('common.urls'))
         ]))
 ]
 

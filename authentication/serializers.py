@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from authentication.models import User
 from django.contrib.auth.models import Group
+from common.models import Report
 
 from xzit.emails import send_otp
 
@@ -136,3 +137,15 @@ class BusinessSubTypeSaveSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'business_sub_type', )
+
+
+class UserReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ('reason', 'description', 'user')
+        
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.report_type = "User"
+        instance.save()
+        return instance

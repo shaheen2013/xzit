@@ -69,7 +69,7 @@ class StorySerializer(serializers.ModelSerializer):
 class PostReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = ('reason', 'post')
+        fields = ('reason', 'description', 'post')
         
     def create(self, validated_data):
         instance = self.Meta.model(**validated_data)
@@ -80,7 +80,7 @@ class PostReportSerializer(serializers.ModelSerializer):
 class StoryReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = ('reason', 'story')
+        fields = ('reason', 'description', 'story')
         
     def create(self, validated_data):
         instance = self.Meta.model(**validated_data)

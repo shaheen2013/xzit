@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from rest_framework import exceptions
+from common.models import Report
 
 from xzit.emails import send_otp
 
@@ -129,3 +130,13 @@ class BusinessSubTypeSaveApiView(generics.UpdateAPIView):
     serializer_class = serializers.BusinessSubTypeSaveSerializer
     queryset = User.objects.all()
     lookup_field = "id"
+
+
+
+class UserReportApiView(generics.CreateAPIView):
+    """
+        Report to User
+    """
+    serializer_class = serializers.UserReportSerializer
+    queryset = Report
+    permission_classes = [IsAuthenticated]

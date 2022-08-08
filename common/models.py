@@ -4,6 +4,9 @@ from authentication.models import User
 from commerce.models import Ad
 from xzit.mixins.models import AuthorMixin, TimeStampMixin 
 
+class ReportReason(TimeStampMixin, models.Model):
+       reason = models.CharField(max_length=200, null=True, blank=True)
+
 class Report(TimeStampMixin, AuthorMixin):
        REPORT_TYPES = (
               ('Post', 'post'),
@@ -11,7 +14,8 @@ class Report(TimeStampMixin, AuthorMixin):
               ('Ad', 'ad'),
               ('User', 'user')
        )
-       reason = models.TextField(null=False, blank=False)
+       reason = models.ForeignKey(ReportReason, on_delete=models.CASCADE, null=False, blank=False)
+       description = models.TextField(null=True, blank=True)
        report_type = models.CharField(max_length=10, choices=REPORT_TYPES)
        
        post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
@@ -26,5 +30,8 @@ class Report(TimeStampMixin, AuthorMixin):
 class SavePostAd(TimeStampMixin, AuthorMixin):
        post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
        ad = models.ForeignKey(Ad, on_delete=models.CASCADE, blank=True, null=True)
+
+
+
        
        

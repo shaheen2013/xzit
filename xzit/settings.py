@@ -126,7 +126,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.' + config('DB_ENGINE', 'mysql'),
         'NAME': config('DB_NAME', 'hr_mediusware'),
         'USER': config('DB_USERNAME', 'root'),
-        'PASSWORD': config('DB_PASSWORD', ''),
+        'PASSWORD': config('DB_PASSWORD', 'root'),
         'HOST': config('DB_HOST', 'localhost'),
         'PORT': config('DB_PORT', '3306'),
     }
