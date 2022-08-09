@@ -3,7 +3,8 @@ from django.urls import path
 from activity import views
 
 urlpatterns = [
-    path('posts/', views.PostListApiView.as_view()),
+    path('posts/', views.PostCreateApiView.as_view()),
+    path('posts/feeds/', views.PostFeedListApiView.as_view()),
     path('posts/<int:id>/', views.PostUpdateDeleteApiView.as_view()),
     path('posts/interection/', views.PostInterectionCreateAPIView.as_view()),
     path('posts/comment/', views.PostCommentAPIView.as_view()),

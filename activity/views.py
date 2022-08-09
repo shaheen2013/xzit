@@ -18,7 +18,7 @@ Activity - Post
 - Delete Post
 - Report Post
 """
-class PostListApiView(generics.CreateAPIView):
+class PostCreateApiView(generics.CreateAPIView):
     serializer_class = serializers.PostSerializer
     queryset = Post.objects.all()
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -27,6 +27,15 @@ class PostListApiView(generics.CreateAPIView):
 
     def get_queryset(self):
         return Post.objects.filter(created_by=self.request.user)
+
+class PostFeedListApiView(generics.ListAPIView):
+    serializer_class = serializers.PostSerializer
+    queryset = Post.objects.all()
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    pagination_class = CustomPagination
+
+    # def get_queryset(self):
+    #     return Post.objects.filter(created_by=self.request.user)
 
 
 class PostUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
