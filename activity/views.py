@@ -104,7 +104,7 @@ class StoryRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.StorySerializer
     queryset = Story.objects.all()
     lookup_field = 'id'
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Story.objects.filter(created_by=self.request.user)
