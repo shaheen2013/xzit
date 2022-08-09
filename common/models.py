@@ -6,6 +6,9 @@ from xzit.mixins.models import AuthorMixin, TimeStampMixin
 
 class ReportReason(TimeStampMixin, models.Model):
        reason = models.CharField(max_length=200, null=True, blank=True)
+       
+       class Meta:
+              db_table = "reasons"
 
 class Report(TimeStampMixin, AuthorMixin):
        REPORT_TYPES = (
