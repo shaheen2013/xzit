@@ -38,7 +38,7 @@ class PostFeedListApiView(generics.ListAPIView):
     #     return Post.objects.filter(created_by=self.request.user)
 
 
-class PostUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
+class PostDeleteApiView(generics.DestroyAPIView):
     serializer_class = serializers.PostSerializer
     queryset = Post.objects.all()
     lookup_field = 'id'
@@ -46,6 +46,20 @@ class PostUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Post.objects.filter(created_by=self.request.user)
+class PostUpdateApiView(generics.UpdateAPIView):
+    serializer_class = serializers.PostSerializer
+    queryset = Post.objects.all()
+    lookup_field = 'id'
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Post.objects.filter(created_by=self.request.user)
+
+class PostDetailsApiView(generics.RetrieveAPIView):
+    serializer_class = serializers.PostSerializer
+    queryset = Post.objects.all()
+    lookup_field = 'id'
+    permission_classes = [IsAuthenticated]
 
 
 class PostInterectionCreateAPIView(generics.CreateAPIView):

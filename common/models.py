@@ -17,7 +17,7 @@ class Report(TimeStampMixin, AuthorMixin):
               ('Ad', 'ad'),
               ('User', 'user')
        )
-       reason = models.ForeignKey(ReportReason, on_delete=models.CASCADE, null=False, blank=False)
+       reason = models.ForeignKey(ReportReason, on_delete=models.CASCADE, null=True, blank=True)
        description = models.TextField(null=True, blank=True)
        report_type = models.CharField(max_length=10, choices=REPORT_TYPES)
        
