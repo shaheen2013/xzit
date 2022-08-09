@@ -39,7 +39,7 @@ class UserBasicInfoUpdateSerializer(serializers.ModelSerializer):
     }
     class Meta:
         model = User
-        fields = ('id','age', 'gender', 'country', 'city')
+        fields = ('id','age', 'gender', 'country', 'city', 'location')
 
 
 class MerchantRegisterSerializer(serializers.ModelSerializer):
@@ -75,7 +75,7 @@ class MerchantBasicInfoUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','business_name', 'business_manager', 'business_type',
-                  'business_address', 'country', 'city', 'bio', 'amenties')
+                  'business_address', 'country', 'city', 'bio', 'amenties', 'location')
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -149,3 +149,21 @@ class UserReportSerializer(serializers.ModelSerializer):
         instance.report_type = "User"
         instance.save()
         return instance
+        
+class UserProfileSerializer(serializers.ModelSerializer):
+    extra_kwargs = {
+            'id': {'read_only': True},
+            'role': {'read_only': True},
+        }
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image')
+
+class MerchantProfileSerializer(serializers.ModelSerializer):
+    extra_kwargs = {
+            'id': {'read_only': True},
+            'role': {'read_only': True},
+        }
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'gender', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address', 'business_hours', 'amenties')

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from commerce import models
 from common.models import Report
+from rest_framework.response import Response
 
 class RecursiveField(serializers.Serializer):
     def to_representation(self, value):
@@ -132,4 +133,40 @@ class InviteDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.AdInvitation
+    
+    
+class ReservationSerializer(serializers.ModelSerializer):
+    status = serializers.BooleanField(initial=False)
+
+    extra_kwargs = {
+        'number_of_accepted': {'read_only' : True},
+        'ad_details': {'read_only' : True},
+    }
+    class Meta: 
+        model = models.Reservation
+        fields = ('id','ad', 'date', 'service', 'time', 'table', 'table_duration', 'status', 'guest')
         
+class ReservationCreateSerializer(ReservationSerializer):
+    extra_kwargs = {
+        'created_at': {'read_only' : True},
+        'created_by': {'read_only': True},
+        'status': {'read_only': True}
+    }
+class UserReservationListSerializer(ReservationSerializer):
+    extra_kwargs = {
+        'created_at': {'read_only' : True},
+        'created_by': {'read_only': True},
+        'status': {'read_only': True},
+    } 
+
+class ReservationDetailsSerializer(ReservationSerializer):
+    extra_kwargs = {
+        'created_at': {'read_only' : True},
+        'created_by': {'read_only': True}
+    } 
+    
+class ReservationUpdateSerializer(ReservationSerializer):
+    extra_kwargs = {
+        'created_at': {'read_only' : True},
+        'created_by': {'read_only': True }
+    }

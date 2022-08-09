@@ -26,6 +26,17 @@ class MerchantBasicInfoUpdateApiView(generics.UpdateAPIView):
     lookup_field = "id"
     queryset = User
     
+class UserProfileApiView(generics.RetrieveUpdateAPIView):
+    serializer_class = serializers.UserProfileSerializer
+    queryset = User.objects.all()
+    lookup_field = "id"
+    permission_classes = [IsAuthenticated]
+
+class MerchantProfileApiView(generics.RetrieveUpdateAPIView):
+    serializer_class = serializers.MerchantProfileSerializer
+    queryset = User.objects.all()
+    lookup_field = "id"
+    permission_classes = [IsAuthenticated]
     
 class ChangePasswordApiView(generics.UpdateAPIView):
     serializer_class = serializers.ChangePasswordSerializer

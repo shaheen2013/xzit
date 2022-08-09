@@ -1,6 +1,5 @@
 from django.db import models
 from mptt.managers import TreeManager
-
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth import get_user_model
@@ -41,17 +40,51 @@ class Ad(AuthorMixin, TimeStampMixin):
     event_days = models.IntegerField()
     country_code = models.CharField(max_length=255)
     phone = models.CharField(max_length=40)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     amenties = models.CharField(max_length=255)
-    total_shares = models.CharField(max_length=20)
+    total_shares = models.CharField(max_length=20, default=0, blank=True, null=True)
     container_ratio = models.CharField(max_length=255)
 
     def __str__(self):
         return self.title
+    
+    def total_invites(self):
+        return AdInvitation.objects.filter(ad=self.id)
+    
+    def accepted_invites(self):
+        return AdInvitation.objects.filter(ad=self.id, status="accepted")
+    
+    def number_of_invites(self):
+        return self.total_invites().count()
+    
+    def number_of_accepted(self):
+        return self.accepted_invites().count()
 
     class Meta:
         db_table = "ads"
 
+class Reservation(AuthorMixin, TimeStampMixin): 
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    date = models.DateField(auto_created=False, auto_now=False)
+    time = models.TimeField(auto_created=False, auto_now=False)
+    table = models.CharField(max_length=100, null=True, blank=True)
+    table_duration = models.CharField(max_length=50, null=True, blank=True)
+    service = models.CharField(max_length=200, null=True, blank=True)
+    status = models.BooleanField(default=False, blank=True)
+    
+    class Meta:
+        db_table = "reservations"
+        
+    def guest(self, *args, **kwargs):
+        return Ad.objects.filter(id=self.ad_id).count()
+    
+    def date_time(self):
+        return f'{self.date} {self.time}'
+    
+    def ad_titile(self):
+        return self.ad.title
+    
+    
 
 class AdBanner(TimeStampMixin):
     ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
