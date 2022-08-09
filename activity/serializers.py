@@ -62,7 +62,7 @@ class StorySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         instance = self.Meta.model(**validated_data)
         instance.save()
-        async_task("activity.services.sleep_and_remove", obj=instance, hook="activity.services.hook_after_sleep")
+        async_task("common.services.sleep_and_remove", obj=instance, hook="common.services.hook_after_sleep")
         
         return instance
     
