@@ -1,20 +1,27 @@
-from genericpath import exists
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from activity.models import Post, PostComment, PostImage, PostLike, Story
 from django_q.tasks import async_task
+from authentication.serializers import UserProfileSerializer
 
 from common.models import Report
 
+
+
 class PostSerializer(serializers.ModelSerializer):
+    owner = serializers.SerializerMethodField(read_only=True)
     extra_kwargs = {
         'id': {'read_only' : True},
         'created_at': {'read_only': True}
     }
     class Meta:
         model = Post
-        fields = ('id', 'description')
-        
+        fields = ('id', 'description', 'location', 'image_url', 'owner')
+    
+    def get_owner(self, obj):
+        return f'{obj.created_by.id}'   
+
+
 class PostManageSerializer(serializers.ModelSerializer):
     class Meta:
         model=Post
@@ -62,14 +69,14 @@ class StorySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         instance = self.Meta.model(**validated_data)
         instance.save()
-        async_task("activity.services.sleep_and_remove", obj=instance, hook="activity.services.hook_after_sleep")
+        async_task("common.services.sleep_and_remove", obj=instance, hook="common.services.hook_after_sleep")
         
         return instance
     
 class PostReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = ('reason', 'post')
+        fields = ('reason', 'description', 'post')
         
     def create(self, validated_data):
         instance = self.Meta.model(**validated_data)
@@ -80,7 +87,7 @@ class PostReportSerializer(serializers.ModelSerializer):
 class StoryReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = ('reason', 'story')
+        fields = ('reason', 'description', 'story')
         
     def create(self, validated_data):
         instance = self.Meta.model(**validated_data)

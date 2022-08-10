@@ -20,7 +20,7 @@ Activity - Post
 - Delete Post
 - Report Post
 """
-class PostListApiView(generics.CreateAPIView):
+class PostCreateApiView(generics.CreateAPIView):
     serializer_class = serializers.PostSerializer
     queryset = Post.objects.all()
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -30,8 +30,17 @@ class PostListApiView(generics.CreateAPIView):
     def get_queryset(self):
         return Post.objects.filter(created_by=self.request.user)
 
+class PostFeedListApiView(generics.ListAPIView):
+    serializer_class = serializers.PostSerializer
+    queryset = Post.objects.all()
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    pagination_class = CustomPagination
 
-class PostUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
+    # def get_queryset(self):
+    #     return Post.objects.filter(created_by=self.request.user)
+
+
+class PostDeleteApiView(generics.DestroyAPIView):
     serializer_class = serializers.PostSerializer
     queryset = Post.objects.all()
     lookup_field = 'id'
@@ -39,6 +48,20 @@ class PostUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Post.objects.filter(created_by=self.request.user)
+class PostUpdateApiView(generics.UpdateAPIView):
+    serializer_class = serializers.PostSerializer
+    queryset = Post.objects.all()
+    lookup_field = 'id'
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Post.objects.filter(created_by=self.request.user)
+
+class PostDetailsApiView(generics.RetrieveAPIView):
+    serializer_class = serializers.PostSerializer
+    queryset = Post.objects.all()
+    lookup_field = 'id'
+    permission_classes = [IsAuthenticated]
 
 
 class PostInterectionCreateAPIView(generics.CreateAPIView):
@@ -97,7 +120,7 @@ class StoryRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.StorySerializer
     queryset = Story.objects.all()
     lookup_field = 'id'
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Story.objects.filter(created_by=self.request.user)

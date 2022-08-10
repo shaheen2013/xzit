@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from authentication.models import User
 from django.contrib.auth.models import Group
+from common.models import Report
 
 from xzit.emails import send_otp
 
@@ -38,7 +39,7 @@ class UserBasicInfoUpdateSerializer(serializers.ModelSerializer):
     }
     class Meta:
         model = User
-        fields = ('id','age', 'gender', 'country', 'city')
+        fields = ('id','age', 'gender', 'country', 'city', 'location')
 
 
 class MerchantRegisterSerializer(serializers.ModelSerializer):
@@ -74,7 +75,7 @@ class MerchantBasicInfoUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','business_name', 'business_manager', 'business_type',
-                  'business_address', 'country', 'city', 'bio', 'amenties')
+                  'business_address', 'country', 'city', 'bio', 'amenties', 'location')
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -136,3 +137,33 @@ class BusinessSubTypeSaveSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'business_sub_type', )
+
+
+class UserReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ('reason', 'description', 'user')
+        
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.report_type = "User"
+        instance.save()
+        return instance
+        
+class UserProfileSerializer(serializers.ModelSerializer):
+    extra_kwargs = {
+            'id': {'read_only': True},
+            'role': {'read_only': True},
+        }
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image')
+
+class MerchantProfileSerializer(serializers.ModelSerializer):
+    extra_kwargs = {
+            'id': {'read_only': True},
+            'role': {'read_only': True},
+        }
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'gender', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address', 'business_hours', 'amenties')

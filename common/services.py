@@ -6,3 +6,7 @@ def sleep_and_remove(obj):
        
 def hook_after_sleep(task):
        print('Story has been Deleted')
+       
+def sleep_and_send(secs = 15):
+       sleep(secs)
+       

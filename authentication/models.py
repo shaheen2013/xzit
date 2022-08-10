@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail
+# from commerce.models import BusinessTypeManager
 
 AUTH_PROVIDERS = {'facebook': 'Facebook','google': 'Google', 'username': 'Username'}
 
@@ -31,6 +32,7 @@ class User(AbstractUser, TimeStampMixin):
     auth_provider = models.CharField(
         max_length=255, blank=False, null=False, default=AUTH_PROVIDERS.get('username'))
 
+    location = models.CharField(max_length=200, null=True, blank=True)
     country_code = models.CharField(max_length=3, null=True, blank=True)
     country = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
@@ -39,10 +41,13 @@ class User(AbstractUser, TimeStampMixin):
 
     business_name = models.CharField(max_length=255, null=True, blank=True)
     business_manager = models.CharField(max_length=255, null=True, blank=True)
-    business_type = models.CharField(max_length=255, null=True, blank=True)
-    business_sub_type = models.CharField(max_length=255, null=True, blank=True)
+    # business_type = models.ForeignKey(BusinessType, on_delete=models.CASCADE, null=True, blank=True)
+    # business_sub_type = models.ForeignKey(BusinessType, on_delete=models.CASCADE, null=True, blank=True)
+    business_type = models.CharField(max_length=200, null=True, blank=True)
+    business_sub_type = models.CharField(max_length=200, null=True, blank=True)
     business_days = models.CharField(max_length=255, null=True, blank=True)
     business_hours = models.CharField(max_length=255, null=True, blank=True)
+    business_phone = models.CharField(max_length=255, null=True, blank=True)
     business_address = models.TextField(null=True, blank=True)
     
     bio = models.TextField(null=True, blank=True)

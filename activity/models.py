@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.db import models
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
 
@@ -7,6 +8,8 @@ class Post(TimeStampMixin, AuthorMixin):
        description = models.TextField(null=True, blank=True)
        total_shares = models.IntegerField(default=0)
        container_ratio = models.IntegerField(default=0)
+       image_url = models.CharField(max_length=200, null=True, blank=True)
+       location = models.CharField(max_length=200, null=True, blank=True)
        
        class Meta:
               db_table="posts"
