@@ -15,4 +15,7 @@ urlpatterns = [
     path('stories/', views.StoryListCreateAPIView.as_view()),
     path('stories/<int:id>/', views.StoryRetrieveUpdateDeleteAPIView.as_view()),
     path('stories/report', views.StoryReportApiView.as_view()),
+
+
+    path('posts/images/', views.PostImageAPIView.as_view()),
 ]

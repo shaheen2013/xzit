@@ -5,8 +5,10 @@ from commerce import serializers, models
 from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from authentication.models import User
+
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class BusinessTypeApiView(ModelViewSet):
     queryset = models.BusinessType.objects.viewable()
@@ -37,12 +39,6 @@ class AdApiView(ModelViewSet):
     def get_queryset(self):
         return models.Ad.objects.filter(created_by=self.request.user.id)
 
-
-class AdBannerApiView(ModelViewSet):
-    queryset = models.AdBanner.objects.all()
-    serializer_class = serializers.AdBannerSerializer
-    permission_classes = [IsAuthenticated]
-    
     
 class AdReportApiView(CreateAPIView):
     """
@@ -83,6 +79,13 @@ class AdSendedInvitationListApiView(ListAPIView):
     
     def get_queryset(self):
         return models.AdInvitation.objects.filter(invited_by=self.request.user)
+
+
+class AdBannerImageCreateApiView(CreateAPIView):
+    queryset = models.AdBanner
+    serializer_class = serializers.AdBannerImageSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [IsAuthenticated]
     
     
     """********************************************************************************************

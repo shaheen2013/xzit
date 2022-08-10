@@ -4,7 +4,7 @@ from commerce import views
 
 router = DefaultRouter()
 router.register(r'ad', views.AdApiView, basename='ad')
-router.register(r'ad/banner', views.AdBannerApiView, basename='ad_banner')
+# router.register(r'ad/banner', views.AdBannerApiView, basename='ad_banner')
 
 urlpatterns = [
     path('ad/invitaions/send/', views.SendAdInviteApiView.as_view()),
@@ -20,5 +20,7 @@ urlpatterns = [
     path('reservations/<int:id>/', views.ReservationDetailApiView.as_view()),
     path('user/reservations/<int:id>/update/', views.ReservationUserUpdateApiView.as_view()),
     path('merchant/reservations/<int:id>/update/', views.ReservationMerchantUpdateApiView.as_view()),
+
+    path('ad/images/', views.AdBannerImageCreateApiView.as_view()),
     path('', include(router.urls)),
 ]

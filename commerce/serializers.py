@@ -62,35 +62,43 @@ class AdSerializer(serializers.ModelSerializer):
 
 
 class AdBannerImageShowSerializer(serializers.ModelSerializer):
+    extra_kwargs = {
+        'id':{'read_only':True},
+        'image_path': {'required': True}
+    }
     class Meta:
-        model = models.AdBannerImage
-        fields = ('id', 'path')
+        model = models.AdBanner
+        fields = ('ratio', 'image_path')
 
 
 class AdBannerImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.AdBannerImage
-        fields = '__all__'
+        model = models.AdBanner
+        fields = ('ad', 'ratio', 'image_path')
+
+    extra_kwargs = {
+        'image_path': {'required': True}
+    }
 
 
 class AdBannerSerializer(serializers.ModelSerializer):
-    ad_banner_images = AdBannerImageShowSerializer(many=True)
+    ad_banner_images = AdBannerImageShowSerializer(many=True, read_only=True)
     class Meta:
         model = models.AdBanner
         fields = ('id', 'ad', 'ratio', 'ad_banner_images')
 
-    def create(self, validated_data):
-        images = []
-        if validated_data.get('ad_banner_images'):
-            images = validated_data.pop('ad_banner_images')
+    # def create(self, validated_data):
+    #     images = []
+    #     if validated_data.get('ad_banner_images'):
+    #         images = validated_data.pop('ad_banner_images')
 
-        instance = models.AdBanner.objects.create(**validated_data)
-        instance.save()
-        for img in images:
-            obj = models.AdBannerImage.objects.create(path=img.get('path'), ad_banner=instance)
-            obj.save()
+    #     instance = models.AdBanner.objects.create(**validated_data)
+    #     instance.save()
+    #     for img in images:
+    #         obj = models.AdBannerImage.objects.create(path=img.get('file_path'), ad_banner=instance)
+    #         obj.save()
 
-        return instance
+    #     return instance
     
 class AdReportSerializer(serializers.ModelSerializer):
     class Meta:
