@@ -47,7 +47,7 @@ class PostDeleteApiView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Post.objects.filter(created_by=self.request.user)
+        return Post.objects.filter(created_by=self.request.user.id)
 class PostUpdateApiView(generics.UpdateAPIView):
     serializer_class = serializers.PostSerializer
     queryset = Post.objects.all()
