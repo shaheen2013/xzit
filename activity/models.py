@@ -12,7 +12,12 @@ class Post(TimeStampMixin, AuthorMixin):
               db_table="posts"
               
        def __str__(self):
-              return self.created_by.name
+              return str(self.created_by.name)
+
+
+class PostImage(TimeStampMixin, AuthorMixin):
+       post = models.ForeignKey(Post, on_delete=models.CASCADE)
+       image_path = models.ImageField(upload_to='posts/', blank=False, null=False)
               
               
 class PostLike(TimeStampMixin, AuthorMixin):

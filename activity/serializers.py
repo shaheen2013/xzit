@@ -1,7 +1,7 @@
 from genericpath import exists
 from rest_framework import serializers, status
 from rest_framework.response import Response
-from activity.models import Post, PostComment, PostLike, Story
+from activity.models import Post, PostComment, PostImage, PostLike, Story
 from django_q.tasks import async_task
 
 from common.models import Report
@@ -87,6 +87,14 @@ class StoryReportSerializer(serializers.ModelSerializer):
         instance.report_type = "Story"
         instance.save()
         return instance
+
+
+class PostImageSerializer(serializers.ModelSerializer):
+    image_path = serializers.ImageField(required=True)
+    class Meta:
+        model = PostImage
+        fields = ('post', 'image_path')
+
         
         
         

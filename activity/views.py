@@ -2,13 +2,15 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import generics
 from yaml import serialize
-from activity.models import Post, PostComment, PostLike, Story
+from activity.models import Post, PostComment, PostImage, PostLike, Story
 from activity import serializers
 from rest_framework.permissions import IsAuthenticated
 from common.models import Report
 from xzit.mixins.models import CustomPagination
 from datetime import timedelta
 from django.utils import timezone
+
+from rest_framework.parsers import MultiPartParser, FormParser
 
 """ 
 Activity - Post
@@ -107,7 +109,14 @@ class StoryReportApiView(generics.CreateAPIView):
     serializer_class = serializers.StoryReportSerializer
     queryset = Report
     permission_classes = [IsAuthenticated]
-       
+
+
+
+class PostImageAPIView(generics.CreateAPIView):
+    serializer_class = serializers.PostImageSerializer
+    queryset = PostImage
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [IsAuthenticated]
     
 def removeStories(request):
     lastHour = timezone.now() - timedelta(hours=1)
@@ -115,4 +124,7 @@ def removeStories(request):
     stories = list(stories)
     
     return JsonResponse(stories, safe=False)
+
+
+
 

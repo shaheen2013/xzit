@@ -1,7 +1,7 @@
 from ast import arg
 from django.contrib import admin
 
-from activity.models import Post, PostComment, PostLike, Story
+from activity.models import Post, PostComment, PostLike, Story, PostImage
 
 
 # Register your models here.
@@ -28,3 +28,8 @@ class PostCommentAdmin(admin.ModelAdmin):
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
     list_display = ['story_type', 'media']
+
+
+@admin.register(PostImage)
+class PostImageAdmin(admin.ModelAdmin):
+    list_display = ['image_path']
