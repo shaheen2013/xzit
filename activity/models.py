@@ -66,4 +66,4 @@ class StoryViewer(TimeStampMixin, AuthorMixin):
 
 class PostImage(TimeStampMixin, AuthorMixin):
        post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='postimage')
-       image_path = models.ImageField(upload_to='posts/', blank=False, null=False)
+       image_path = models.FileField(upload_to='posts/', blank=False, null=False)
