@@ -64,20 +64,20 @@ class AdSerializer(serializers.ModelSerializer):
 class AdBannerImageShowSerializer(serializers.ModelSerializer):
     extra_kwargs = {
         'id':{'read_only':True},
-        'file_path': {'required': True}
+        'image_path': {'required': True}
     }
     class Meta:
-        model = models.AdBannerImage
-        fields = ('id', 'file_path')
+        model = models.AdBanner
+        fields = ('ratio', 'image_path')
 
 
 class AdBannerImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.AdBannerImage
-        fields = ('ad_banner', 'file_path')
+        model = models.AdBanner
+        fields = ('ad', 'ratio', 'image_path')
 
     extra_kwargs = {
-        'file_path': {'required': True}
+        'image_path': {'required': True}
     }
 
 

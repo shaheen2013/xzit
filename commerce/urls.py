@@ -21,9 +21,6 @@ urlpatterns = [
     path('user/reservations/<int:id>/update/', views.ReservationUserUpdateApiView.as_view()),
     path('merchant/reservations/<int:id>/update/', views.ReservationMerchantUpdateApiView.as_view()),
 
-
-    path('ad/banner/', views.AdBannerListApiView.as_view()),
-    path('ad/banner/<int:id>', views.AdBannerRetriveApiView.as_view()),
-    path('ad/banner/images/', views.AdBannerImageCreateApiView.as_view()),
+    path('ad/images/', views.AdBannerImageCreateApiView.as_view()),
     path('', include(router.urls)),
 ]

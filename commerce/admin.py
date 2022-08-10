@@ -1,5 +1,5 @@
 from django.contrib import admin
-from commerce.models import BusinessType, Ad, AdBanner, AdBannerImage, AdComment, AdInvitation, AdLike, Reservation
+from commerce.models import BusinessType, Ad, AdBanner, AdComment, AdInvitation, AdLike, Reservation
 
 @admin.register(AdInvitation)
 class AdInvitationAdmin(admin.ModelAdmin):
@@ -14,7 +14,6 @@ class AdAdmin(admin.ModelAdmin):
 
 admin.site.register(BusinessType)
 admin.site.register(AdBanner)
-admin.site.register(AdBannerImage)
 admin.site.register(AdComment)
 # admin.site.register(AdInvitation)
 admin.site.register(AdLike)
