@@ -68,6 +68,9 @@ class User(AbstractUser, TimeStampMixin):
         
     def name(self):
         return f"{self.first_name} {self.last_name}" 
+
+    def __str__(self) -> str:
+        return self.name()
     
     def role(self):
         group = self.groups.first()

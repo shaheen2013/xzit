@@ -99,10 +99,10 @@ class AdBanner(TimeStampMixin):
 
 class AdBannerImage(TimeStampMixin):
     ad_banner = models.ForeignKey(AdBanner, on_delete=models.CASCADE, related_name='ad_banner_images')
-    path = models.CharField(max_length=255)
+    file_path = models.FileField(upload_to='banner/', blank=True, null=False)
 
-    def __str__(self):
-        return self.ad_banner.ad.title
+    def __str__(self) ->str:
+        return f"{self.ad_banner.ad.title}"
 
 
 class AdComment(AuthorMixin, TimeStampMixin):

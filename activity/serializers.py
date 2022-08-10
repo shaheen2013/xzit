@@ -7,16 +7,21 @@ from authentication.serializers import UserProfileSerializer
 from common.models import Report
 
 
+class PostImageUrlSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostImage
+        fields = ['image_path']
 
 class PostSerializer(serializers.ModelSerializer):
     owner = serializers.SerializerMethodField(read_only=True)
+    postimages = PostImageUrlSerializer(many=True, read_only=True, source='postimage')
     extra_kwargs = {
         'id': {'read_only' : True},
         'created_at': {'read_only': True}
     }
     class Meta:
         model = Post
-        fields = ('id', 'description', 'location', 'image_url', 'owner')
+        fields = ('id', 'description', 'location', 'owner', 'postimages')
     
     def get_owner(self, obj):
         return f'{obj.created_by.id}'   
