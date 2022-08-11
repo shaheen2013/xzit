@@ -1,4 +1,6 @@
+from asyncore import write
 from rest_framework import serializers
+from authentication.serializers import UserProfileSerializer
 from commerce import models
 from common.models import Report
 from rest_framework.response import Response
@@ -53,12 +55,7 @@ class GetBusinessTypesSerializer(serializers.ModelSerializer):
 
     def list(self, request, *args, **kwargs):
         pass
-        
-    
-class AdSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Ad
-        fields = '__all__'
+
 
 
 class AdBannerImageShowSerializer(serializers.ModelSerializer):
@@ -69,6 +66,25 @@ class AdBannerImageShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AdBanner
         fields = ('ratio', 'image_path')
+    
+    
+class AdSerializerGet(serializers.ModelSerializer):
+    business_type = GetBusinessTypesSerializer(read_only=True)
+    business_sub_type = GetBusinessTypesSerializer(many=True, read_only=True)
+    adimages = AdBannerImageShowSerializer(many=True, read_only=True, source='adimage')
+    created_by = UserProfileSerializer()
+    class Meta:
+        model = models.Ad
+        fields = '__all__'
+
+
+class AdSerializerPostPutPatch(serializers.ModelSerializer):
+    adimages = AdBannerImageShowSerializer(many=True, read_only=True, source='adimage')
+    class Meta:
+        model = models.Ad
+        fields = '__all__'
+
+
 
 
 class AdBannerImageSerializer(serializers.ModelSerializer):

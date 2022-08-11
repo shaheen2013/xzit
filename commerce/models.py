@@ -3,9 +3,7 @@ from mptt.managers import TreeManager
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
+from django.core.validators import FileExtensionValidator
 
 class BusinessTypeManager(TreeManager):
     def viewable(self):
@@ -27,8 +25,8 @@ class BusinessType(MPTTModel, TimeStampMixin):
 
 
 class Ad(AuthorMixin, TimeStampMixin):
-    business_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE)
-    #business_sub_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE)
+    business_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE, related_name='ad_business_type')
+    business_sub_type = models.ManyToManyField(BusinessType,  related_name='ad_business_sub_type')
     company_name = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
@@ -87,9 +85,9 @@ class Reservation(AuthorMixin, TimeStampMixin):
     
 
 class AdBanner(TimeStampMixin):
-    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='adimage')
     ratio = models.CharField(max_length=255)
-    image_path = models.FileField(null=True, blank=True, upload_to="banners/")
+    image_path = models.FileField(null=True, blank=True, upload_to="banners/", validators=[FileExtensionValidator(allowed_extensions=["jpg",'png','mp4'])])
 
     def __str__(self):
         return self.ad.title
@@ -108,6 +106,7 @@ class AdComment(AuthorMixin, TimeStampMixin):
     class Meta:
         db_table = "ad_comments"
 
+User = get_user_model()
 
 class AdInvitation(TimeStampMixin):
     STATUS = (

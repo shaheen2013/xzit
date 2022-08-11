@@ -32,12 +32,25 @@ class SingleBusinessTypeApiView(RetrieveAPIView):
 
     
 class AdApiView(ModelViewSet):
-    queryset = models.Ad.objects.all()
-    serializer_class = serializers.AdSerializer
+    queryset = models.Ad.objects.select_related('business_type').prefetch_related('adimage', 'business_sub_type').all()
+    serializer_class = serializers.AdSerializerGet
     permission_classes = [IsAuthenticated]
+    # parser_classes = [FormParser]
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST','PUT', 'PATCH']:
+            return serializers.AdSerializerPostPutPatch
+        return super().get_serializer_class()
+        
     
     def get_queryset(self):
         return models.Ad.objects.filter(created_by=self.request.user.id)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        for image in instance.adimage.all():
+            image.image_path.delete(False)
+        return super().destroy(request, *args, **kwargs)
 
     
 class AdReportApiView(CreateAPIView):

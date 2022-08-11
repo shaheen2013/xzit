@@ -7,31 +7,14 @@ from authentication.serializers import UserProfileSerializer
 from common.models import Report
 
 
+
+
 class PostImageUrlSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostImage
         fields = ['image_path']
 
-class PostSerializer(serializers.ModelSerializer):
-    owner = serializers.SerializerMethodField(read_only=True)
-    postimages = PostImageUrlSerializer(many=True, read_only=True, source='postimage')
-    extra_kwargs = {
-        'id': {'read_only' : True},
-        'created_at': {'read_only': True}
-    }
-    class Meta:
-        model = Post
-        fields = ('id', 'description', 'location', 'owner', 'postimages')
-    
-    def get_owner(self, obj):
-        return f'{obj.created_by.id}'   
 
-
-class PostManageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Post
-        fields = ['total_shares', 'container_ratio']
-        
 
 class PostCommentSerializer(serializers.ModelSerializer):
     extra_kwargs={
@@ -42,6 +25,50 @@ class PostCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostComment
         fields = ['id', 'post', 'created_by', 'comment']  
+
+
+class PostLikeSerializer(serializers.ModelSerializer):
+    created_by = UserProfileSerializer()
+    class Meta:
+        model = PostLike
+        fields = ('id', 'created_by')
+
+class PostSerializerGet(serializers.ModelSerializer):
+    created_by = UserProfileSerializer()
+    postimages = PostImageUrlSerializer(many=True, read_only=True, source='postimage')
+    postcomments = PostCommentSerializer(many=True, read_only=True, source='postcomment')
+    post_liker = PostLikeSerializer(many=True, source='postlike')
+    extra_kwargs = {
+        'id': {'read_only' : True},
+        'created_at': {'read_only': True},
+    }
+    post_likes = serializers.SerializerMethodField(method_name='count_likes')
+
+    def count_likes(self, instance: Post):
+        count = instance.postlike.all().count()
+        return count
+
+    class Meta:
+        model = Post
+        fields = ('id', 'description', 'location', 'created_by', 'postimages', 'postcomments','post_likes','post_liker')
+    
+
+class PostSerializerPostPutPatch(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = ('description', 'location')
+    
+
+      
+
+
+class PostManageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Post
+        fields = ['total_shares', 'container_ratio']
+        
+
 
 class PostInterectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -61,6 +88,7 @@ class PostInterectionSerializer(serializers.ModelSerializer):
     
 
 class StorySerializer(serializers.ModelSerializer):
+    created_by = UserProfileSerializer()
     
     extra_kwargs = {
         'story_time': {'read_only' : True},
@@ -102,10 +130,13 @@ class StoryReportSerializer(serializers.ModelSerializer):
 
 
 class PostImageSerializer(serializers.ModelSerializer):
-    image_path = serializers.ImageField(required=True)
     class Meta:
         model = PostImage
         fields = ('post', 'image_path')
+
+    extra_kwargs = {
+        'image_path': {'required': True}
+    }
 
         
         
