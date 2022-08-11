@@ -32,7 +32,7 @@ class PostCreateApiView(generics.CreateAPIView):
 
 class PostFeedListApiView(generics.ListAPIView):
     serializer_class = serializers.PostSerializer
-    queryset = Post.objects.prefetch_related('postimage').all()
+    queryset = Post.objects.select_related('created_by').prefetch_related('postimage', 'postcomment').all()
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     pagination_class = CustomPagination
 

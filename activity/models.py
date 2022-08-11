@@ -28,7 +28,7 @@ class PostLike(TimeStampMixin, AuthorMixin):
               
 class PostComment(TimeStampMixin, AuthorMixin):
        comment = models.TextField()
-       post = models.ForeignKey(Post, on_delete=models.CASCADE)
+       post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='postcomment')
        
        class Meta: 
               db_table = "comment_posts"
