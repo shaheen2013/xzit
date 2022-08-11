@@ -7,10 +7,8 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail
-# from commerce.models import BusinessTypeManager
 
 AUTH_PROVIDERS = {'facebook': 'Facebook','google': 'Google', 'username': 'Username'}
-
 
 class User(AbstractUser, TimeStampMixin):
     GENDER = (
@@ -41,10 +39,8 @@ class User(AbstractUser, TimeStampMixin):
 
     business_name = models.CharField(max_length=255, null=True, blank=True)
     business_manager = models.CharField(max_length=255, null=True, blank=True)
-    # business_type = models.ForeignKey(BusinessType, on_delete=models.CASCADE, null=True, blank=True)
-    # business_sub_type = models.ForeignKey(BusinessType, on_delete=models.CASCADE, null=True, blank=True)
-    business_type = models.CharField(max_length=200, null=True, blank=True)
-    business_sub_type = models.CharField(max_length=200, null=True, blank=True)
+    business_type = models.ForeignKey('commerce.BusinessType', on_delete=models.CASCADE, null=True, blank=True, related_name='user_business_type')
+    business_sub_type = models.ManyToManyField('commerce.BusinessType', related_name='user_business_sub_type')
     business_days = models.CharField(max_length=255, null=True, blank=True)
     business_hours = models.CharField(max_length=255, null=True, blank=True)
     business_phone = models.CharField(max_length=255, null=True, blank=True)

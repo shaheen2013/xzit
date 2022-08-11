@@ -21,7 +21,7 @@ Activity - Post
 - Report Post
 """
 class PostCreateApiView(generics.CreateAPIView):
-    serializer_class = serializers.PostSerializer
+    serializer_class = serializers.PostSerializerPostPutPatch
     queryset = Post.objects.all()
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -31,8 +31,8 @@ class PostCreateApiView(generics.CreateAPIView):
         return Post.objects.filter(created_by=self.request.user)
 
 class PostFeedListApiView(generics.ListAPIView):
-    serializer_class = serializers.PostSerializer
-    queryset = Post.objects.select_related('created_by').prefetch_related('postimage', 'postcomment').all()
+    serializer_class = serializers.PostSerializerGet
+    queryset = Post.objects.select_related('created_by').prefetch_related('postimage', 'postcomment','postlike').all()
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     pagination_class = CustomPagination
 
@@ -41,7 +41,7 @@ class PostFeedListApiView(generics.ListAPIView):
 
 
 class PostDeleteApiView(generics.DestroyAPIView):
-    serializer_class = serializers.PostSerializer
+    serializer_class = serializers.PostSerializerGet
     queryset = Post.objects.all()
     lookup_field = 'id'
     permission_classes = [IsAuthenticated]
@@ -56,7 +56,7 @@ class PostDeleteApiView(generics.DestroyAPIView):
         return super().destroy(request, *args, **kwargs)
 
 class PostUpdateApiView(generics.UpdateAPIView):
-    serializer_class = serializers.PostSerializer
+    serializer_class = serializers.PostSerializerPostPutPatch
     queryset = Post.objects.all()
     lookup_field = 'id'
     permission_classes = [IsAuthenticated]
@@ -65,7 +65,7 @@ class PostUpdateApiView(generics.UpdateAPIView):
         return Post.objects.filter(created_by=self.request.user)
 
 class PostDetailsApiView(generics.RetrieveAPIView):
-    serializer_class = serializers.PostSerializer
+    serializer_class = serializers.PostSerializerGet
     queryset = Post.objects.all()
     lookup_field = 'id'
     permission_classes = [IsAuthenticated]

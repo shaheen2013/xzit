@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from authentication.models import User
 from django.contrib.auth.models import Group
+from commerce.models import BusinessType
 from common.models import Report
 
 from xzit.emails import send_otp
@@ -149,12 +150,22 @@ class UserReportSerializer(serializers.ModelSerializer):
         instance.report_type = "User"
         instance.save()
         return instance
+
+
+class BusinessTypesSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = BusinessType
+        fields = ('id', 'name')
+
         
 class UserProfileSerializer(serializers.ModelSerializer):
     extra_kwargs = {
             'id': {'read_only': True},
             'role': {'read_only': True},
         }
+    business_type = BusinessTypesSerializer()
+    business_sub_type = BusinessTypesSerializer(many=True)
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image')

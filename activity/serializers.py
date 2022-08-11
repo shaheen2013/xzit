@@ -27,20 +27,38 @@ class PostCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'post', 'created_by', 'comment']  
 
 
-class PostSerializer(serializers.ModelSerializer):
-    created_by = UserProfileSerializer(read_only=True)
+class PostLikeSerializer(serializers.ModelSerializer):
+    created_by = UserProfileSerializer()
+    class Meta:
+        model = PostLike
+        fields = ('id', 'created_by')
+
+class PostSerializerGet(serializers.ModelSerializer):
+    created_by = UserProfileSerializer()
     postimages = PostImageUrlSerializer(many=True, read_only=True, source='postimage')
     postcomments = PostCommentSerializer(many=True, read_only=True, source='postcomment')
+    post_liker = PostLikeSerializer(many=True, source='postlike')
     extra_kwargs = {
         'id': {'read_only' : True},
-        'created_at': {'read_only': True}
+        'created_at': {'read_only': True},
     }
+    post_likes = serializers.SerializerMethodField(method_name='count_likes')
+
+    def count_likes(self, instance: Post):
+        count = instance.postlike.all().count()
+        return count
+
     class Meta:
         model = Post
-        fields = ('id', 'description', 'location', 'created_by', 'postimages', 'postcomments')
+        fields = ('id', 'description', 'location', 'created_by', 'postimages', 'postcomments','post_likes','post_liker')
     
-    # def get_owner(self, obj):
-    #     return f'{obj.created_by.id}' 
+
+class PostSerializerPostPutPatch(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = ('description', 'location')
+    
 
       
 
@@ -70,6 +88,7 @@ class PostInterectionSerializer(serializers.ModelSerializer):
     
 
 class StorySerializer(serializers.ModelSerializer):
+    created_by = UserProfileSerializer()
     
     extra_kwargs = {
         'story_time': {'read_only' : True},

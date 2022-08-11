@@ -20,7 +20,7 @@ class Post(TimeStampMixin, AuthorMixin):
               
               
 class PostLike(TimeStampMixin, AuthorMixin):
-       post = models.ForeignKey(Post, on_delete=models.CASCADE)
+       post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='postlike')
        
        
        class Meta:

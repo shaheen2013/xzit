@@ -5,9 +5,6 @@ from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 
-User = get_user_model()
-
-
 class BusinessTypeManager(TreeManager):
     def viewable(self):
         queryset = self.get_queryset().filter(level=0)
@@ -28,8 +25,8 @@ class BusinessType(MPTTModel, TimeStampMixin):
 
 
 class Ad(AuthorMixin, TimeStampMixin):
-    business_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE)
-    #business_sub_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE)
+    business_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE, related_name='ad_business_type')
+    business_sub_type = models.ManyToManyField(BusinessType,  related_name='ad_business_sub_type')
     company_name = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
@@ -109,6 +106,7 @@ class AdComment(AuthorMixin, TimeStampMixin):
     class Meta:
         db_table = "ad_comments"
 
+User = get_user_model()
 
 class AdInvitation(TimeStampMixin):
     STATUS = (
