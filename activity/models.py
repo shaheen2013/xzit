@@ -1,6 +1,7 @@
 from pyexpat import model
 from django.db import models
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
+from django.core.validators import FileExtensionValidator
 
 
 # Create your models here.
@@ -66,4 +67,4 @@ class StoryViewer(TimeStampMixin, AuthorMixin):
 
 class PostImage(TimeStampMixin, AuthorMixin):
        post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='postimage')
-       image_path = models.FileField(upload_to='posts/', blank=False, null=False)
+       image_path = models.FileField(null=True, blank=True, upload_to="posts/", validators=[FileExtensionValidator(allowed_extensions=["jpg",'png','mp4'])])

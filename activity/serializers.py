@@ -24,7 +24,9 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ('id', 'description', 'location', 'owner', 'postimages')
     
     def get_owner(self, obj):
-        return f'{obj.created_by.id}'   
+        return f'{obj.created_by.id}' 
+
+      
 
 
 class PostManageSerializer(serializers.ModelSerializer):
@@ -102,10 +104,13 @@ class StoryReportSerializer(serializers.ModelSerializer):
 
 
 class PostImageSerializer(serializers.ModelSerializer):
-    image_path = serializers.ImageField(required=True)
     class Meta:
         model = PostImage
         fields = ('post', 'image_path')
+
+    extra_kwargs = {
+        'image_path': {'required': True}
+    }
 
         
         

@@ -3,6 +3,7 @@ from mptt.managers import TreeManager
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth import get_user_model
+from django.core.validators import FileExtensionValidator
 
 User = get_user_model()
 
@@ -87,9 +88,9 @@ class Reservation(AuthorMixin, TimeStampMixin):
     
 
 class AdBanner(TimeStampMixin):
-    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='adimage')
     ratio = models.CharField(max_length=255)
-    image_path = models.FileField(null=True, blank=True, upload_to="banners/")
+    image_path = models.FileField(null=True, blank=True, upload_to="banners/", validators=[FileExtensionValidator(allowed_extensions=["jpg",'png','mp4'])])
 
     def __str__(self):
         return self.ad.title

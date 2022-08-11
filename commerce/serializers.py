@@ -53,12 +53,7 @@ class GetBusinessTypesSerializer(serializers.ModelSerializer):
 
     def list(self, request, *args, **kwargs):
         pass
-        
-    
-class AdSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Ad
-        fields = '__all__'
+
 
 
 class AdBannerImageShowSerializer(serializers.ModelSerializer):
@@ -69,6 +64,14 @@ class AdBannerImageShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AdBanner
         fields = ('ratio', 'image_path')
+    
+class AdSerializer(serializers.ModelSerializer):
+    adimages = AdBannerImageShowSerializer(many=True, read_only=True, source='adimage')
+    class Meta:
+        model = models.Ad
+        fields = '__all__'
+
+
 
 
 class AdBannerImageSerializer(serializers.ModelSerializer):
