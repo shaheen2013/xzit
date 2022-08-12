@@ -12,6 +12,7 @@ urlpatterns = [
     path('posts/comment/', views.PostCommentAPIView.as_view()),
     path('posts/<int:post_id>/comments/', views.PostCommentsAPIView.as_view()),
     path('posts/report', views.PostReportApiView.as_view()),
+    path('stories/feed/', views.StoryFeedAPIView.as_view()),
     path('stories/', views.StoryListCreateAPIView.as_view()),
     path('stories/<int:id>/', views.StoryRetrieveUpdateDeleteAPIView.as_view()),
     path('stories/report', views.StoryReportApiView.as_view()),

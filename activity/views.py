@@ -113,28 +113,44 @@ class PostReportApiView(generics.CreateAPIView):
 """
 class StoryListCreateAPIView(generics.ListCreateAPIView):
     """
-    New Story Create
+        Story Create & List
     """
-    serializer_class = serializers.StorySerializerGet
+    serializer_class = serializers.StorySerializerDetails
     queryset = Story.objects.all()
+    parser_classes = (MultiPartParser, FormParser)
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Story.objects.filter(created_by=self.request.user)
+    
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return serializers.StorySerializer
+        return super().get_serializer_class()
+    
+class StoryFeedAPIView(generics.ListAPIView):
+    """
+    Story Feed
+    """
+    serializer_class = serializers.StorySerializerDetails
+    queryset = Story.objects.all()
 
 
 class StoryRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = serializers.StorySerializerGet
+    serializer_class = serializers.StorySerializerDetails
     queryset = Story.objects.all()
     lookup_field = 'id'
-    # permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        if self.request.method == "GET":
+            return self.queryset
         return Story.objects.filter(created_by=self.request.user)
 
     def get_serializer_class(self):
         if self.request.method in ['POST','PUT', 'PATCH']:
-            return serializers.StorySerializerPost
+            return serializers.StorySerializer
         return super().get_serializer_class()
  
 class StoryReportApiView(generics.CreateAPIView):

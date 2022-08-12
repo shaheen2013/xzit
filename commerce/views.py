@@ -176,5 +176,3 @@ class MerchantReservationListApiView(ListAPIView):
     def get_queryset(self):
         ads = models.Ad.objects.filter(created_by_id__pk=self.request.user.id) 
         return models.Reservation.objects.filter(ad__in=ads)
-    
-

@@ -7,6 +7,7 @@ from common.models import Report
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth.models import Permission, Group
 from xzit.emails import send_otp, send_reset_otp
+from django.shortcuts import get_object_or_404
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -128,10 +129,9 @@ class PasswordResetSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         email = validated_data['email']
-        if self.Meta.model.objects.filter(email=email).exists():
-            user = User.objects.filter(email=email).first()
-            send_reset_otp(email, user)
-            return user
+        user = get_object_or_404(User, email=email)
+        send_reset_otp(email, user)
+        return user
 
 class PasswordResetVerifySerializer(serializers.ModelSerializer):
     class Meta:

@@ -47,7 +47,7 @@ class Story(TimeStampMixin, AuthorMixin):
               ('video', 'Video')
        )
        story_type = models.CharField(max_length=10, default=TYPE_CHOICES[1], choices=TYPE_CHOICES)
-       media = models.CharField(max_length=255, null=True, blank=True)
+       media = models.FileField(upload_to='stories/', validators=[FileExtensionValidator(allowed_extensions=["jpg",'png','mp4'])])
        view = models.CharField(max_length = 255, null=True, blank=True)
        views_count = models.IntegerField(default=0)
        story_time = models.DateTimeField(auto_now=True)

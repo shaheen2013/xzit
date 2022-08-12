@@ -96,7 +96,7 @@ class PostInterectionSerializer(serializers.ModelSerializer):
         return instance
     
 
-class StorySerializerPost(serializers.ModelSerializer):
+class StorySerializer(serializers.ModelSerializer):
     extra_kwargs = {
         'story_time': {'read_only' : True},
         'created_by' : {'read_only': True}
@@ -113,9 +113,8 @@ class StorySerializerPost(serializers.ModelSerializer):
         return instance
     
 
-class StorySerializerGet(serializers.ModelSerializer):
+class StorySerializerDetails(serializers.ModelSerializer):
     created_by = UserProfileSerializer()
-    
     extra_kwargs = {
         'story_time': {'read_only' : True},
         'created_by' : {'read_only': True}

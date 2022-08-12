@@ -221,32 +221,10 @@ class PasswordResetOtpVerfy(generics.GenericAPIView):
         response.data = serializers.UserProfileSerializer(user).data
         return response
 
-# class PasswordResetConfirmAPIView(generics.GenericAPIView):
-#     serializer_class = serializers.PasswordResetConfirmSerializer
-#     queryset = User.objects.all()
-    
-#     def post(self, request, *args, **kwargs):
-#         """ Login system: User and Merchent both. """
-#         User = get_user_model()
-#         id = request.data.get('id')
-#         serializer = serializers.PasswordResetConfirmSerializer(request.data)
-#         response = Response()
-        
-#         if serializer.is_valid():
-#             user = User.objects.filter(id=request.data.get('id')).first()
-#             user.reset_pass_otp = None
-#             response.data = serializers.UserProfileSerializer(user).data
-#             return response
-#         else:
-#             response.data = serializer.errors
-#             return response.data
-
-
-
-class PasswordResetConfirmAPIView(generics.UpdateAPIView):
+class PasswordResetConfirmAPIView(generics.CreateAPIView):
     serializer_class = serializers.PasswordResetConfirmSerializer
 
-    def update(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = User.objects.get(id=serializer.data.get('id'))
