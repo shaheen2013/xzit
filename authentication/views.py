@@ -1,4 +1,5 @@
 from rest_framework import generics, status
+from rest_framework.views import APIView
 from authentication import serializers
 from authentication.models import User
 from rest_framework.permissions import IsAuthenticated
@@ -149,3 +150,79 @@ class UserReportApiView(generics.CreateAPIView):
     serializer_class = serializers.UserReportSerializer
     queryset = Report
     permission_classes = [IsAuthenticated]
+
+
+
+class PasswordResetAPIView(generics.CreateAPIView):
+    serializer_class = serializers.PasswordResetSerializer
+    queryset = User 
+
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        return Response({"details" : "Your OTP has been sent your email"})
+
+
+
+
+class PasswordResetOtpVerfy(generics.GenericAPIView):
+    serializer_class = serializers.PasswordResetVerifySerializer
+    queryset = User.objects.all()
+    
+    def post(self, request, *args, **kwargs):
+        """ Login system: User and Merchent both. """
+        User = get_user_model()
+        otp = request.data.get('reset_pass_otp')
+        response = Response()
+        if (otp is None):
+            raise exceptions.AuthenticationFailed('otp required')
+        user = User.objects.filter(reset_pass_otp=otp).first()
+        if(user is None):
+            raise exceptions.AuthenticationFailed('otp not valid')
+
+        response.data = serializers.UserProfileSerializer(user).data
+        return response
+
+# class PasswordResetConfirmAPIView(generics.GenericAPIView):
+#     serializer_class = serializers.PasswordResetConfirmSerializer
+#     queryset = User.objects.all()
+    
+#     def post(self, request, *args, **kwargs):
+#         """ Login system: User and Merchent both. """
+#         User = get_user_model()
+#         id = request.data.get('id')
+#         serializer = serializers.PasswordResetConfirmSerializer(request.data)
+#         response = Response()
+        
+#         if serializer.is_valid():
+#             user = User.objects.filter(id=request.data.get('id')).first()
+#             user.reset_pass_otp = None
+#             response.data = serializers.UserProfileSerializer(user).data
+#             return response
+#         else:
+#             response.data = serializer.errors
+#             return response.data
+
+
+
+class PasswordResetConfirmAPIView(generics.UpdateAPIView):
+    serializer_class = serializers.PasswordResetConfirmSerializer
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = User.objects.get(id=serializer.data.get('id'))
+            print(user.id)
+            if user is None:
+                return Response({"details": "User not found !"}, 404)
+            if user.reset_pass_otp != serializer.data.get('reset_pass_otp'):
+                return Response({"details" : "Your OTP is wrong !"}, 400)
+
+        user.set_password(serializer.data.get("password"))
+        user.reset_pass_otp = None
+        user.save()
+        print(user)
+        return Response( {
+            'status': 'success',
+            'code': status.HTTP_200_OK,
+            'message': 'Password updated successfully'
+        })
