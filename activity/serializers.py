@@ -27,16 +27,25 @@ class PostCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'post', 'created_by', 'comment']  
 
 
+class PostCommentShowSerializer(serializers.ModelSerializer):
+    created_by = UserProfileSerializer()
+
+    class Meta:
+        model = PostComment
+        fields = ['id', 'post', 'created_by', 'comment']  
+
+
 class PostLikeSerializer(serializers.ModelSerializer):
     created_by = UserProfileSerializer()
     class Meta:
         model = PostLike
         fields = ('id', 'created_by')
 
+
 class PostSerializerGet(serializers.ModelSerializer):
     created_by = UserProfileSerializer()
     postimages = PostImageUrlSerializer(many=True, read_only=True, source='postimage')
-    postcomments = PostCommentSerializer(many=True, read_only=True, source='postcomment')
+    postcomments = PostCommentShowSerializer(many=True, read_only=True, source='postcomment')
     post_liker = PostLikeSerializer(many=True, source='postlike')
     extra_kwargs = {
         'id': {'read_only' : True},
