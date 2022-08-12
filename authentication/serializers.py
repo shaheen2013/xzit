@@ -129,10 +129,13 @@ class PasswordResetSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         email = validated_data['email']
-        user = get_object_or_404(User, email=email)
-        send_reset_otp(email, user)
-        return user
-
+        if self.Meta.model.objects.filter(email=email).exists():
+            user = User.objects.filter(email=email).first()
+            send_reset_otp(email, user)
+            return user
+        else:
+            raise serializers.ValidationError({'details':'user not exist!'})
+        
 class PasswordResetVerifySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -152,10 +155,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         #     'reset_pass_otp': {'required': True, 'allow_blank': False},
         #     'new_passwrod': {'required': True, 'allow_blank': False},
         # }
-
-
-
-
 
 class BusinessTypeSaveSerializer(serializers.ModelSerializer):
 
