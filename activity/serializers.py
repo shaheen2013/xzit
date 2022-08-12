@@ -96,7 +96,24 @@ class PostInterectionSerializer(serializers.ModelSerializer):
         return instance
     
 
-class StorySerializer(serializers.ModelSerializer):
+class StorySerializerPost(serializers.ModelSerializer):
+    extra_kwargs = {
+        'story_time': {'read_only' : True},
+        'created_by' : {'read_only': True}
+    }
+
+    class Meta:
+        model=Story
+        fields=('id', 'story_type', 'media', 'story_time', 'created_by')
+        
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        async_task("common.services.sleep_and_remove", obj=instance, hook="common.services.hook_after_sleep")
+        return instance
+    
+
+class StorySerializerGet(serializers.ModelSerializer):
     created_by = UserProfileSerializer()
     
     extra_kwargs = {
@@ -112,8 +129,9 @@ class StorySerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.save()
         async_task("common.services.sleep_and_remove", obj=instance, hook="common.services.hook_after_sleep")
-        
         return instance
+
+        
     
 class PostReportSerializer(serializers.ModelSerializer):
     class Meta:

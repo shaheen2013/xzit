@@ -115,7 +115,7 @@ class StoryListCreateAPIView(generics.ListCreateAPIView):
     """
     New Story Create
     """
-    serializer_class = serializers.StorySerializer
+    serializer_class = serializers.StorySerializerGet
     queryset = Story.objects.all()
     permission_classes = [IsAuthenticated]
 
@@ -124,13 +124,18 @@ class StoryListCreateAPIView(generics.ListCreateAPIView):
 
 
 class StoryRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = serializers.StorySerializer
+    serializer_class = serializers.StorySerializerGet
     queryset = Story.objects.all()
     lookup_field = 'id'
     # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Story.objects.filter(created_by=self.request.user)
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST','PUT', 'PATCH']:
+            return serializers.StorySerializerPost
+        return super().get_serializer_class()
  
 class StoryReportApiView(generics.CreateAPIView):
     """
