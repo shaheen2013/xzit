@@ -9,7 +9,7 @@ def send_otp(email, user):
        user.is_verified = False
        user.save()
        message = f'Your otp is {otp}'
-       email_from = settings.EMAIL_HOST 
+       email_from = settings.EMAIL_HOST_USER 
        send_mail(subject, message, email_from, [email])
        
 
@@ -20,6 +20,6 @@ def send_reset_otp(email, user):
        user.save()
        print(user)
        message = f'Your otp is {otp}'
-       email_from = settings.EMAIL_HOST 
+       email_from = settings.EMAIL_HOST_USER 
        send_mail(subject, message, email_from, [email])
        
