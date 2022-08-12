@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import exceptions
 from common.models import Report
 from xzit.emails import send_otp
+from django.contrib.auth.models import Permission, Group
 
 class UserRegisterApiView(generics.CreateAPIView):
     serializer_class = serializers.UserRegisterSerializer
@@ -149,3 +150,41 @@ class UserReportApiView(generics.CreateAPIView):
     serializer_class = serializers.UserReportSerializer
     queryset = Report
     permission_classes = [IsAuthenticated]
+    
+class PermissionAPIView(generics.ListAPIView):
+    """ 
+    All permissions. 
+    """
+    serializer_class = serializers.PermissionSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Permission.objects.all()
+    
+class RolesCreateListApiView(generics.ListCreateAPIView):
+    serializer_class = serializers.RoleSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Group.objects.all()
+    
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return serializers.RoleDetailsSerializer
+        return super().get_serializer_class()
+    
+class RolesRetriveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializers.RoleSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Group.objects.all()
+    lookup_field = "id"
+    
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return serializers.RoleDetailsSerializer
+        return super().get_serializer_class()
+    
+    def update(self, request, *args, **kwargs):
+        super().update(request, *args, **kwargs)
+        return Response({'success':'Your data has been updated.'})
+    
+    def destroy(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({'success': 'Your data has been deleted.'})
+    

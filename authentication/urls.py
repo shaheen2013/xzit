@@ -19,7 +19,8 @@ urlpatterns = [
     path('otp-resend/', views.OtpResendpApiView.as_view(), name='resend_otp'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-
-
     path('user/report', views.UserReportApiView.as_view()),
+    path('permissions/', views.PermissionAPIView.as_view(), name="permissions"),
+    path('roles/', views.RolesCreateListApiView.as_view()),
+    path('roles/<int:id>/', views.RolesRetriveUpdateDestroyAPIView.as_view())
 ]

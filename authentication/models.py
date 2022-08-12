@@ -1,4 +1,3 @@
-from pyexpat import model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -7,6 +6,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail
+from django.contrib.auth.models import Group
 
 AUTH_PROVIDERS = {'facebook': 'Facebook','google': 'Google', 'username': 'Username'}
 
@@ -74,39 +74,8 @@ class User(AbstractUser, TimeStampMixin):
             return group.name
         return 'No Role'
 
-# TODO: I will pick the architecture down bellow.
-#  i always like to break db tables as many pices as possible for better performance
-#  but i had to follow the previous dev work for design the db otherwise
-#  it will be hard to sync data from the old db to new
-# class UserAddress(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#
-#
+Group.add_to_class('active', models.BooleanField(default=True))
 
 
 class UserSocial(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-#
-# class UserBusiness(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-from django.dispatch import receiver
-from django.urls import reverse
-from django_rest_passwordreset.signals import reset_password_token_created
-from django.core.mail import send_mail
-
-@receiver(reset_password_token_created)
-def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-    email_plaintext_message = f"Your password reset token is: {reset_password_token.key}"
-
-    send_mail(
-        # title:
-        "Password Reset for {title}".format(title="XZIT"),
-        # message:
-        email_plaintext_message,
-        # from:
-        "noreply@somehost.local",
-        # to:
-        [reset_password_token.user.email]
-    )

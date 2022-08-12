@@ -4,7 +4,7 @@ from authentication.models import User
 from django.contrib.auth.models import Group
 from commerce.models import BusinessType
 from common.models import Report
-
+from django.contrib.auth.models import Permission, Group
 from xzit.emails import send_otp
 
 
@@ -178,3 +178,22 @@ class MerchantProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'gender', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address', 'business_hours', 'amenties')
+        
+class PermissionSerializer(serializers.ModelSerializer):
+    
+    class Meta: 
+        model = Permission 
+        fields = '__all__'
+        
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+class RoleDetailsSerializer(serializers.ModelSerializer):
+    permissions = PermissionSerializer(many=True)
+    class Meta:
+        model = Group
+        fields = '__all__'
+    
+        
