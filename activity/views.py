@@ -88,7 +88,7 @@ class PostCommentAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     
 class PostCommentsAPIView(generics.ListAPIView):
-       serializer_class = serializers.PostCommentSerializer
+       serializer_class = serializers.PostCommentShowSerializer
        lookup_field= 'post_id'
        queryset = PostComment
        permission_classes = [IsAuthenticated]
