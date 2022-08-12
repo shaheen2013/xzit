@@ -19,6 +19,7 @@ class User(AbstractUser, TimeStampMixin):
     
     is_verified = models.BooleanField(default=False)
     otp = models.CharField(max_length=10, null=True, blank=True)
+    reset_pass_otp = models.CharField(max_length=6, null=True, blank=True)
     
     phone = models.CharField(max_length=40, null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True)

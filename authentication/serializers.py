@@ -4,8 +4,9 @@ from authentication.models import User
 from django.contrib.auth.models import Group
 from commerce.models import BusinessType
 from common.models import Report
+from rest_framework.exceptions import ValidationError
 from django.contrib.auth.models import Permission, Group
-from xzit.emails import send_otp
+from xzit.emails import send_otp, send_reset_otp
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -119,6 +120,41 @@ class AccountVerificationSerializer(serializers.ModelSerializer):
             user = User.objects.filter(email=email).first()
             send_otp(email, user)
             return user
+
+class PasswordResetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', )
+
+    def create(self, validated_data):
+        email = validated_data['email']
+        if self.Meta.model.objects.filter(email=email).exists():
+            user = User.objects.filter(email=email).first()
+            send_reset_otp(email, user)
+            return user
+
+class PasswordResetVerifySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('reset_pass_otp', )
+        extra_kwargs = {'reset_pass_otp': {'required': True, 'allow_blank': False}}
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    password = serializers.CharField()
+    id = serializers.IntegerField()
+    reset_pass_otp = serializers.CharField()
+    # class Meta:
+    #     model = User
+    #     fields = ('id','reset_pass_otp', 'new_passwrod')
+        # extra_kwargs = {
+        #     'id': {'read_only': True},
+        #     'reset_pass_otp': {'required': True, 'allow_blank': False},
+        #     'new_passwrod': {'required': True, 'allow_blank': False},
+        # }
+
+
+
 
 
 class BusinessTypeSaveSerializer(serializers.ModelSerializer):
