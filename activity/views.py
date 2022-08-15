@@ -162,6 +162,16 @@ class StoryReportApiView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
 
+class MyPostAPIList(generics.ListAPIView):
+    """
+        My Posts list.
+    """
+    serializer_class = serializers.PostSerializerGet
+    queryset = Post.objects.all()
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(created_by=self.request.user.id)
 
 class PostImageAPIView(generics.CreateAPIView):
     serializer_class = serializers.PostImageSerializer
