@@ -5,7 +5,7 @@ from activity import views
 urlpatterns = [
     path('posts/', views.PostCreateApiView.as_view()),
     path('posts/feeds/', views.PostFeedListApiView.as_view()),
-    path('posts/my-posts/', views.MyPostAPIList.as_view()),
+    path('posts/feeds/<int:id>/', views.MyPostAPIList.as_view()),
     path('posts/<int:id>/', views.PostUpdateApiView.as_view()),
     path('posts/<int:id>/delete/', views.PostDeleteApiView.as_view()),
     path('posts/<int:id>/show/', views.PostDetailsApiView.as_view()),
