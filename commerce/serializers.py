@@ -17,7 +17,7 @@ class BusinessTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.BusinessType
-        fields = ('id', 'name', 'children', 'parent')
+        fields = ('id', 'name', 'icon', 'children', 'parent')
 
     def create(self, validated_data):
         parent = validated_data.get('parent')
@@ -51,7 +51,7 @@ class GetBusinessTypesSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.BusinessType
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'icon')
 
     def list(self, request, *args, **kwargs):
         pass

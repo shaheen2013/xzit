@@ -13,6 +13,7 @@ class BusinessTypeManager(TreeManager):
 
 class BusinessType(MPTTModel, TimeStampMixin):
     name = models.CharField(max_length=255)
+    icon = models.ImageField("Type Icon", upload_to="icons/", blank=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='children')
 
     objects = BusinessTypeManager()

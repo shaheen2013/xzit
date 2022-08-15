@@ -155,7 +155,7 @@ class BusinessSubTypeSaveSerializer(serializers.ModelSerializer):
         }
     class Meta:
         model = User
-        fields = ('id', 'business_sub_type', )
+        fields = ('id', 'business_sub_type')
 
 
 class UserReportSerializer(serializers.ModelSerializer):
@@ -174,7 +174,7 @@ class BusinessTypesSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = BusinessType
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'icon')
 
 
 class BusinessTypeSaveSerializer(serializers.ModelSerializer):
@@ -184,7 +184,7 @@ class BusinessTypeSaveSerializer(serializers.ModelSerializer):
     }
     class Meta:
         model = User
-        fields = ('id', 'business_type', ) 
+        fields = ('id', 'business_type') 
 class UserProfileSerializer(serializers.ModelSerializer):
     extra_kwargs = {
             'id': {'read_only': True},
