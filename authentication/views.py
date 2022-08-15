@@ -29,8 +29,8 @@ class MerchantBasicInfoUpdateApiView(generics.UpdateAPIView):
 class UserProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.UserProfileSerializer
     queryset = User.objects.select_related('business_type').prefetch_related('business_sub_type').all()
-    lookup_field = "id"
     permission_classes = [IsAuthenticated]
+    lookup_field = "id"
 
 class MerchantProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.MerchantProfileSerializer
