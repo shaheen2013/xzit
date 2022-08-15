@@ -9,9 +9,11 @@ from rest_framework import exceptions
 from common.models import Report
 from xzit.emails import send_otp
 from django.contrib.auth.models import Permission, Group
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class UserRegisterApiView(generics.CreateAPIView):
     serializer_class = serializers.UserRegisterSerializer
+    parser_classes = (MultiPartParser, FormParser)
     
 class UserBasicInfoUpdateApiView(generics.UpdateAPIView):
     serializer_class = serializers.UserBasicInfoUpdateSerializer
@@ -26,14 +28,17 @@ class MerchantBasicInfoUpdateApiView(generics.UpdateAPIView):
     lookup_field = "id"
     queryset = User
     
-class UserProfileApiView(generics.RetrieveUpdateAPIView):
+class UserProfileApiView(generics.UpdateAPIView):
     serializer_class = serializers.UserProfileSerializer
+    # parser_classes = (MultiPartParser, FormParser)
     queryset = User.objects.select_related('business_type').prefetch_related('business_sub_type').all()
+    queryset = User.objects.all()
     permission_classes = [IsAuthenticated]
     lookup_field = "id"
 
 class MerchantProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.MerchantProfileSerializer
+    # parser_classes = (MultiPartParser, FormParser)
     queryset = User.objects.all()
     lookup_field = "id"
     permission_classes = [IsAuthenticated]
@@ -243,3 +248,15 @@ class PasswordResetConfirmAPIView(generics.CreateAPIView):
             'code': status.HTTP_200_OK,
             'message': 'Password updated successfully'
         })
+        
+class UsernameCheckAPIView(generics.RetrieveAPIView):
+    serializer_class = serializers.UsernameCheckSerialiezer
+    queryset = User.objects.all()
+    lookup_field = "username"
+    
+    def retrieve(self, request, *args, **kwargs):
+        # if self.queryset().filter(username=request.username).exists():
+        #     return Response({"message": "Username already taken."}, 409)
+        
+        # return Response({"message": "Username is available."}, 200)
+        return super().retrieve(request, *args, **kwargs)

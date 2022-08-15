@@ -14,7 +14,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'username',
-                  'email', 'phone', 'password', 'tokens', 'otp')
+                  'email', 'phone', 'password', 'tokens', 'otp', 'profile_image')
         extra_kwargs = {
             'password': {'write_only': True},
             'otp':  {'read_only': True},
@@ -230,5 +230,10 @@ class RoleDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
+
+class UsernameCheckSerialiezer(serializers.ModelSerializer):
     
+    class Meta:
+        model = User
+        fields = ('username', ) 
         
