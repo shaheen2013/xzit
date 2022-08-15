@@ -40,7 +40,7 @@ class User(AbstractUser, TimeStampMixin):
 
     business_name = models.CharField(max_length=255, null=True, blank=True)
     business_manager = models.CharField(max_length=255, null=True, blank=True)
-    business_type = models.ForeignKey('commerce.BusinessType', on_delete=models.CASCADE, null=True, blank=True, related_name='user_business_type')
+    business_type = models.ManyToManyField('commerce.BusinessType', related_name='user_business_type')
     business_sub_type = models.ManyToManyField('commerce.BusinessType', related_name='user_business_sub_type')
     business_days = models.CharField(max_length=255, null=True, blank=True)
     business_hours = models.CharField(max_length=255, null=True, blank=True)

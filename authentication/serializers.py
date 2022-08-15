@@ -147,23 +147,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     password = serializers.CharField()
     id = serializers.IntegerField()
     reset_pass_otp = serializers.CharField()
-    # class Meta:
-    #     model = User
-    #     fields = ('id','reset_pass_otp', 'new_passwrod')
-        # extra_kwargs = {
-        #     'id': {'read_only': True},
-        #     'reset_pass_otp': {'required': True, 'allow_blank': False},
-        #     'new_passwrod': {'required': True, 'allow_blank': False},
-        # }
-
-class BusinessTypeSaveSerializer(serializers.ModelSerializer):
-
-    extra_kwargs = {
-        'id': {'read_only': True}
-    }
-    class Meta:
-        model = User
-        fields = ('id', 'business_type', )
 
 
 class BusinessSubTypeSaveSerializer(serializers.ModelSerializer):
@@ -193,19 +176,28 @@ class BusinessTypesSerializer(serializers.ModelSerializer):
         model = BusinessType
         fields = ('id', 'name')
 
-        
+
+class BusinessTypeSaveSerializer(serializers.ModelSerializer):
+    business_type = BusinessTypesSerializer(many=True)
+    extra_kwargs = {
+        'id': {'read_only': True}
+    }
+    class Meta:
+        model = User
+        fields = ('id', 'business_type', ) 
 class UserProfileSerializer(serializers.ModelSerializer):
     extra_kwargs = {
             'id': {'read_only': True},
             'role': {'read_only': True},
         }
-    business_type = BusinessTypesSerializer()
+    business_type = BusinessTypesSerializer(many=True)
     business_sub_type = BusinessTypesSerializer(many=True)
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image')
 
 class MerchantProfileSerializer(serializers.ModelSerializer):
+    business_type = BusinessTypesSerializer(many=True)
     extra_kwargs = {
             'id': {'read_only': True},
             'role': {'read_only': True},

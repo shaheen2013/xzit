@@ -28,11 +28,10 @@ class MerchantBasicInfoUpdateApiView(generics.UpdateAPIView):
     lookup_field = "id"
     queryset = User
     
-class UserProfileApiView(generics.UpdateAPIView):
+class UserProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.UserProfileSerializer
     # parser_classes = (MultiPartParser, FormParser)
     queryset = User.objects.select_related('business_type').prefetch_related('business_sub_type').all()
-    queryset = User.objects.all()
     permission_classes = [IsAuthenticated]
     lookup_field = "id"
 
