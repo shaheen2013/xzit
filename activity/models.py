@@ -35,7 +35,7 @@ class PostComment(TimeStampMixin, AuthorMixin):
               
               
 class PostSave(TimeStampMixin, AuthorMixin):
-       post = models.ForeignKey(Post, on_delete=models.CASCADE)
+       post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='postSave')
        
        class Meta:
               db_table = "save_posts"

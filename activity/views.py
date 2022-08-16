@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import generics
 from yaml import serialize
-from activity.models import Post, PostComment, PostImage, PostLike, Story
+from activity.models import Post, PostComment, PostImage, PostLike, PostSave, Story
 from activity import serializers
 from rest_framework.permissions import IsAuthenticated
 from common.models import Report
@@ -32,7 +32,7 @@ class PostCreateApiView(generics.CreateAPIView):
 
 class PostFeedListApiView(generics.ListAPIView):
     serializer_class = serializers.PostSerializerGet
-    queryset = Post.objects.select_related('created_by').prefetch_related('postimage', 'postcomment','postlike').all()
+    queryset = Post.objects.select_related('created_by').prefetch_related('postimage', 'postcomment','postlike','postSave').all()
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     pagination_class = CustomPagination
 
@@ -189,3 +189,7 @@ def removeStories(request):
 
 
 
+class PostSaveAPIView(generics.CreateAPIView):
+    queryset = PostSave
+    serializer_class = serializers.PostSaveSerializerPost
+    permission_classes = [IsAuthenticated]

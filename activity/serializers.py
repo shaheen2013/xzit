@@ -1,6 +1,6 @@
 from rest_framework import serializers, status
 from rest_framework.response import Response
-from activity.models import Post, PostComment, PostImage, PostLike, Story
+from activity.models import Post, PostComment, PostImage, PostLike, PostSave, Story
 from django_q.tasks import async_task
 from authentication.serializers import UserProfileSerializer
 
@@ -38,6 +38,32 @@ class PostLikeSerializer(serializers.ModelSerializer):
         fields = ('id', 'created_by')
 
 
+class PostSaveSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = PostSave
+        fields = ('post',)
+        
+    def create(self, validated_data):
+        user = self.context['request'].user
+        post = validated_data.get('post')
+        userPostSave = PostSave.objects.filter(created_by=user, post_id=post.id).first()
+        if userPostSave is not None:
+            userPostSave.delete()
+            return userPostSave
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return instance
+
+
+
+class PostSaveSerializerGet(serializers.ModelSerializer):
+    created_by = UserProfileSerializer()
+    class Meta:
+        model = PostSave
+        fields = ('id','created_by',)
+
+
+
 class PostSerializerGet(serializers.ModelSerializer):
     created_by = UserProfileSerializer()
     postimages = PostImageUrlSerializer(many=True, read_only=True, source='postimage')
@@ -48,6 +74,7 @@ class PostSerializerGet(serializers.ModelSerializer):
         'created_at': {'read_only': True},
     }
     post_likes = serializers.SerializerMethodField(method_name='count_likes')
+    post_save = PostSaveSerializerGet(many=True, source='postSave')
 
     def count_likes(self, instance: Post):
         count = instance.postlike.all().count()
@@ -55,7 +82,7 @@ class PostSerializerGet(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'description', 'location', 'created_by', 'postimages', 'postcomments','post_likes','post_liker')
+        fields = ('id', 'description', 'location', 'created_by', 'postimages', 'postcomments','post_likes','post_liker','post_save')
     
 
 class PostSerializerPostPutPatch(serializers.ModelSerializer):
