@@ -53,10 +53,6 @@ class GetBusinessTypesSerializer(serializers.ModelSerializer):
         model = models.BusinessType
         fields = ('id', 'name', 'icon')
 
-    def list(self, request, *args, **kwargs):
-        pass
-
-
 
 class AdBannerImageShowSerializer(serializers.ModelSerializer):
     extra_kwargs = {

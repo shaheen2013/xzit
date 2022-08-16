@@ -26,6 +26,7 @@ class UserBasicInfoUpdateApiView(generics.UpdateAPIView):
     
 class MerchantRegisterApiView(generics.CreateAPIView):
     serializer_class = serializers.MerchantRegisterSerializer
+    parser_classes = (MultiPartParser, FormParser)
     
 class MerchantBasicInfoUpdateApiView(generics.UpdateAPIView):
     serializer_class = serializers.MerchantBasicInfoUpdateSerializer
@@ -280,7 +281,7 @@ class PhoneNumberCheck(generics.CreateAPIView):
             'detail':'Congrasulation! phone number is avilable'
             }, status=status.HTTP_200_OK, headers=headers)
         return Response({
-            'detail':'already taken !'
+            'detail':'Phone number already used with another account.Try another phone number.'
         }, status=status.HTTP_409_CONFLICT, headers=headers)
 
 

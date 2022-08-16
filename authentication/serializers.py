@@ -49,7 +49,7 @@ class MerchantRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'username',
-                  'email', 'phone', 'password', 'tokens', 'otp')
+                  'email', 'phone', 'password', 'tokens', 'otp', 'profile_image')
         extra_kwargs = {
             'password': {'write_only': True},
             'otp': {'read_only': True},
