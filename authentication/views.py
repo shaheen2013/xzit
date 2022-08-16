@@ -22,6 +22,7 @@ class UserBasicInfoUpdateApiView(generics.UpdateAPIView):
     
 class MerchantRegisterApiView(generics.CreateAPIView):
     serializer_class = serializers.MerchantRegisterSerializer
+    parser_classes = (MultiPartParser, FormParser)
     
 class MerchantBasicInfoUpdateApiView(generics.UpdateAPIView):
     serializer_class = serializers.MerchantBasicInfoUpdateSerializer
