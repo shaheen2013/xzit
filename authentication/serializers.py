@@ -149,15 +149,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     reset_pass_otp = serializers.CharField()
 
 
-class BusinessSubTypeSaveSerializer(serializers.ModelSerializer):
-    extra_kwargs = {
-            'id': {'read_only': True}
-        }
-    class Meta:
-        model = User
-        fields = ('id', 'business_sub_type')
-
-
 class UserReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
@@ -176,15 +167,6 @@ class BusinessTypesSerializer(serializers.ModelSerializer):
         model = BusinessType
         fields = ('id', 'name', 'icon')
 
-
-class BusinessTypeSaveSerializer(serializers.ModelSerializer):
-    business_type = BusinessTypesSerializer(many=True)
-    extra_kwargs = {
-        'id': {'read_only': True}
-    }
-    class Meta:
-        model = User
-        fields = ('id', 'business_type') 
 class UserProfileSerializer(serializers.ModelSerializer):
     extra_kwargs = {
             'id': {'read_only': True},
