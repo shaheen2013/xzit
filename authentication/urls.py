@@ -7,8 +7,6 @@ urlpatterns = [
     path('user/profile/<int:id>/', views.UserProfileApiView.as_view(), name='user_profile'),
     path('merchant/profile/<int:id>/', views.MerchantProfileApiView.as_view(), name='merchant_profile'),
     path('user/<int:id>/basic-info/', views.UserBasicInfoUpdateApiView.as_view(), name='user_basic_info'),
-    path('business-interest/<int:id>/save/', views.BusinessTypeSaveApiView.as_view()),
-    path('business-sub-type/<int:id>/save/', views.BusinessSubTypeSaveApiView.as_view()),
     path('merchant/signup/', views.MerchantRegisterApiView.as_view(), name='user_signup'),
     path('merchant/<int:id>/basic-info/', views.MerchantBasicInfoUpdateApiView.as_view(), name='user_basic_info'),
     path('account-verify/', views.AccountVerifyApiView.as_view()),
