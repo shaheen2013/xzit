@@ -26,5 +26,6 @@ urlpatterns = [
     path('permissions/', views.PermissionAPIView.as_view(), name="permissions"),
     path('roles/', views.RolesCreateListApiView.as_view()),
     path('roles/<int:id>/', views.RolesRetriveUpdateDestroyAPIView.as_view()),
-    path('user/check-username/<str:username>/', views.UsernameCheckAPIView.as_view(), name="check_username")
+    path('user/check-username/<str:username>/', views.UsernameCheckAPIView.as_view(), name="check_username"),
+    path('user/check-phone/', views.PhoneNumberCheck.as_view(), name="check_phone"),
 ]
