@@ -234,3 +234,17 @@ class UsernameCheckSerialiezer(serializers.ModelSerializer):
 class UserPhoneCheck(serializers.Serializer):
     phone_number = serializers.CharField(required = True)
     
+
+
+class BusinessInterestSubSerializer(serializers.Serializer):
+    business_type = serializers.PrimaryKeyRelatedField(queryset=BusinessType.objects.all(), many=False)
+    business_sub_type = serializers.PrimaryKeyRelatedField(
+        queryset=BusinessType.objects.all(), many=True
+    )
+
+    # def update(self, instance, validated_data):
+    #     return super().update(instance, validated_data)
+
+
+class BusinessInterestSerializer(serializers.Serializer):
+    type = serializers.ListField(child=BusinessInterestSubSerializer())
