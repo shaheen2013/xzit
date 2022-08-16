@@ -1,3 +1,4 @@
+from urllib import response
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from authentication import serializers
@@ -6,10 +7,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from rest_framework import exceptions
+from commerce.models import BusinessType
 from common.models import Report
 from xzit.emails import send_otp
 from django.contrib.auth.models import Permission, Group
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.shortcuts import get_object_or_404
+
 
 class UserRegisterApiView(generics.CreateAPIView):
     serializer_class = serializers.UserRegisterSerializer
@@ -278,3 +282,40 @@ class PhoneNumberCheck(generics.CreateAPIView):
         return Response({
             'detail':'already taken !'
         }, status=status.HTTP_409_CONFLICT, headers=headers)
+
+
+class BusinessInterest(generics.CreateAPIView):
+    queryset = User
+    serializer_class = serializers.BusinessInterestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        b_type_dict = dict({
+            'business_type':[],
+            'business_sub_type':[],
+        })
+        
+        for data in serializer.data.get('type'):
+            for key, value in data.items():
+                if type(value) is list:
+                    b_type_dict[key].extend(value)
+                else:
+                    b_type_dict[key].append(value) 
+
+        user = get_object_or_404(User, id=request.user.id)
+        business_types = list(set(b_type_dict['business_type']))
+        user.business_sub_type.clear()
+        user.business_type.clear()
+        for business_type in business_types:
+            b_type = get_object_or_404(BusinessType, id=business_type)
+            user.business_type.add(b_type)
+
+        business_sub_types = list(set(b_type_dict['business_sub_type']))
+        for business_sub_type in business_sub_types:
+            b_type = get_object_or_404(BusinessType, id=business_sub_type)
+            user.business_sub_type.add(b_type)
+
+        serializer_user = serializers.UserProfileSerializer(user)
+        return Response(serializer_user.data)
