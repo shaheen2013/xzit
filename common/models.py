@@ -33,11 +33,5 @@ class Report(TimeStampMixin, AuthorMixin):
               db_table = "reports"
        
 
-class SavePostAd(TimeStampMixin, AuthorMixin):
-       post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
-       ad = models.ForeignKey(Ad, on_delete=models.CASCADE, blank=True, null=True)
-
-
-
        
        
