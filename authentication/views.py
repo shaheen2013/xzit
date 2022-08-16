@@ -259,3 +259,22 @@ class UsernameCheckAPIView(generics.RetrieveAPIView):
         
         # return Response({"message": "Username is available."}, 200)
         return super().retrieve(request, *args, **kwargs)
+
+
+
+class PhoneNumberCheck(generics.CreateAPIView):
+    serializer_class = serializers.UserPhoneCheck
+    queryset = User.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = User.objects.filter(phone=serializer.data.get('phone_number')).first()
+        headers = self.get_success_headers(serializer.data)
+        if user is None:
+            return Response({
+            'detail':'Congrasulation! phone number is avilable'
+            }, status=status.HTTP_200_OK, headers=headers)
+        return Response({
+            'detail':'already taken !'
+        }, status=status.HTTP_409_CONFLICT, headers=headers)

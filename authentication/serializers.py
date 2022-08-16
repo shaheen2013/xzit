@@ -229,3 +229,8 @@ class UsernameCheckSerialiezer(serializers.ModelSerializer):
         model = User
         fields = ('username', ) 
         
+
+
+class UserPhoneCheck(serializers.Serializer):
+    phone_number = serializers.CharField(required = True)
+    
