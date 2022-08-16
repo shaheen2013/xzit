@@ -6,14 +6,10 @@ from authentication.serializers import UserProfileSerializer
 
 from common.models import Report
 
-
-
-
 class PostImageUrlSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostImage
         fields = ['image_path']
-
 
 
 class PostCommentSerializer(serializers.ModelSerializer):
@@ -63,10 +59,13 @@ class PostSerializerGet(serializers.ModelSerializer):
     
 
 class PostSerializerPostPutPatch(serializers.ModelSerializer):
-
+    extra_kwargs = {
+        'id': {'read_only' : True},
+        'created_at': {'read_only': True},
+    }
     class Meta:
         model = Post
-        fields = ('description', 'location')
+        fields = ('id','description', 'location')
     
 
       
