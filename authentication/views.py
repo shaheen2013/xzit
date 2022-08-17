@@ -339,3 +339,11 @@ class BusinessInterest(generics.CreateAPIView):
 
         serializer_user = serializers.UserProfileSerializer(user)
         return Response(serializer_user.data)
+from rest_framework.views import APIView
+class RoleAssignAPIView(generics.CreateAPIView):
+    serializer_class = serializers.RoleAssignSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def create(self, request, *args, **kwargs):
+        return Response({'success': 'Role has been assigned !'}, 200)
+        

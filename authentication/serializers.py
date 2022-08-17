@@ -1,7 +1,7 @@
+from tokenize import group
 from rest_framework.response import Response
 from rest_framework import serializers
 from authentication.models import User
-from django.contrib.auth.models import Group
 from commerce.models import BusinessType
 from common.models import Report
 from rest_framework.exceptions import ValidationError
@@ -236,7 +236,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     business_sub_type = BusinessTypesSerializer(many=True)
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image')
+        fields = ('id', 'first_name', 'last_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'role')
 
 class MerchantProfileSerializer(serializers.ModelSerializer):
     business_type = BusinessTypesSerializer(many=True)
@@ -276,7 +276,28 @@ class UsernameCheckSerialiezer(serializers.ModelSerializer):
 class UserPhoneCheck(serializers.Serializer):
     phone_number = serializers.CharField(required = True)
     
+from django.shortcuts import get_object_or_404
+class RoleAssignSerializer(serializers.Serializer):
+    user = serializers.IntegerField()
+    role = serializers.IntegerField()
+    
+    def create(self, validated_data):
+        user = get_object_or_404(User, id=validated_data['user'])
+        role = get_object_or_404(Group, id=validated_data['role'])
+        if user is None:
+            raise serializers.ValidationError({
+                'details': 'User not found'
+            })
+            
+        if role is None:
+            raise serializers.ValidationError({
+                'details': 'Role not found'
+            })
+        user.groups.clear()
+        
+        role.user_set.add(user)
 
+        return validated_data  
 
 class BusinessInterestSubSerializer(serializers.Serializer):
     business_type = serializers.PrimaryKeyRelatedField(queryset=BusinessType.objects.all(), many=False)
