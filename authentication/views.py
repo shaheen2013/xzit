@@ -18,6 +18,14 @@ from django.shortcuts import get_object_or_404
 class UserRegisterApiView(generics.CreateAPIView):
     serializer_class = serializers.UserRegisterSerializer
     parser_classes = (MultiPartParser, FormParser)
+
+
+class AdminRegisterApiView(generics.CreateAPIView):
+    serializer_class = serializers.AdminRegisterSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+
+
     
 class UserBasicInfoUpdateApiView(generics.UpdateAPIView):
     serializer_class = serializers.UserBasicInfoUpdateSerializer

@@ -36,6 +36,34 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return instance
 
 
+
+class AdminRegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'username',
+                  'email', 'phone', 'password', 'tokens', 'otp', 'profile_image')
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'otp':  {'read_only': True},
+            'id': {'read_only': True}
+        }
+
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        instance.is_superuser = True
+        instance.is_staff = True
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        # OTP Send
+        if instance.email is not None:
+            send_otp(instance.email, instance)
+        # Add Group
+        user_group, created = Group.objects.get_or_create(name='user')
+        user_group.user_set.add(instance)
+        return instance
+
 class UserBasicInfoUpdateSerializer(serializers.ModelSerializer):
     extra_kwargs = {
         'id': {'read_only': True}
