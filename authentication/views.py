@@ -145,6 +145,29 @@ class Login(generics.GenericAPIView):
         response.data = serializers.LoginSuccessSerializer(user).data
         return response
     
+class AdminLogin(Login):
+    serializer_class = serializers.AdminLoginSerializer
+    def post(self, request, *args, **kwargs):
+        """ Login system: User and Merchent both. """
+        User = get_user_model()
+        username = request.data.get('email')
+        password = request.data.get('password')
+        response = Response()
+        if (username is None) or (password is None):
+            raise exceptions.AuthenticationFailed('eamil and password required')
+
+        user = User.objects.filter(email=username).first()
+        if(user is None):
+            raise exceptions.AuthenticationFailed('user not found')
+        if (not user.check_password(password)):
+            raise exceptions.AuthenticationFailed('wrong password')
+        
+        if user.is_verified is not True: 
+            return Response({'details' : 'You are not OTP verified. Please verify your OTP'})
+        
+        response.data = serializers.LoginSuccessSerializer(user).data
+        return response
+        
 class AccountVerifyApiView(generics.CreateAPIView):
     serializer_class = serializers.AccountVerificationSerializer 
     queryset = User.objects.all()

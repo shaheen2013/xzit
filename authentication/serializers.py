@@ -7,7 +7,9 @@ from common.models import Report
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth.models import Permission, Group
 from xzit.emails import send_otp, send_reset_otp
-from django.shortcuts import get_object_or_404
+from django.contrib.auth import password_validation as password_validator
+from django.core import exceptions
+
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -25,7 +27,15 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
         if password is not None:
-            instance.set_password(password)
+            try:
+                password_validator.validate_password(password) 
+                instance.set_password(password)
+            except exceptions.ValidationError as e:
+                raise serializers.ValidationError({
+                    'password':e.messages
+                })
+
+                 
         instance.save()
         # OTP Send
         if instance.email is not None:
@@ -51,6 +61,14 @@ class AdminRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
+        if password is not None:
+            try:
+                password_validator.validate_password(password) 
+                instance.set_password(password)
+            except exceptions.ValidationError as e:
+                raise serializers.ValidationError({
+                    'password':e.messages
+                })
         instance.is_superuser = True
         instance.is_staff = True
         if password is not None:
@@ -88,7 +106,13 @@ class MerchantRegisterSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
         if password is not None:
-            instance.set_password(password)
+            try:
+                password_validator.validate_password(password) 
+                instance.set_password(password)
+            except exceptions.ValidationError as e:
+                raise serializers.ValidationError({
+                    'password':e.messages
+                })
         instance.save()
         # OTP Send
         if instance.email is not None:
@@ -120,6 +144,14 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'password')
+
+class AdminLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'password')
+        extra_kwargs = {
+            'email':{'required':True}
+        }
 
 
 class LoginSuccessSerializer(serializers.ModelSerializer):
