@@ -345,5 +345,5 @@ class RoleAssignAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     
     def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)   
         return Response({'success': 'Role has been assigned !'}, 200)
-        
