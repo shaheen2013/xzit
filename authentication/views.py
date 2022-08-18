@@ -14,6 +14,8 @@ from django.contrib.auth.models import Permission, Group
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
 
+from xzit.mixins.models import CustomPagination
+
 
 class UserRegisterApiView(generics.CreateAPIView):
     serializer_class = serializers.UserRegisterSerializer
@@ -347,3 +349,16 @@ class RoleAssignAPIView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)   
         return Response({'success': 'Role has been assigned !'}, 200)
+
+
+
+# user_permission branch 
+class UserListAPIView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
+
+
+
+

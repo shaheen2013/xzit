@@ -311,3 +311,4 @@ class BusinessInterestSubSerializer(serializers.Serializer):
 
 class BusinessInterestSerializer(serializers.Serializer):
     type = serializers.ListField(child=BusinessInterestSubSerializer())
+
