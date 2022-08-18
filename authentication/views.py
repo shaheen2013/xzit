@@ -369,14 +369,13 @@ class XzitPermissionAPIView(generics.ListAPIView):
     serializer_class = serializers.ContentTypeSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = XzitPermission.objects.select_related('content_type').values('id', 'name', 'content_type__model')
+        queryset = Permission.objects.select_related('content_type').values('id', 'name', 'content_type__model')
 
-        objects = {
-            'post':[],
-            'ad':[],
-            'reservation':[],
-            'adinvitation':[]
-        }
+        objects = {}
+
+        for permission in queryset:
+            objects[permission['content_type__model']]= []
+
         for permission in queryset:
             objects[permission['content_type__model']].append(permission)
         

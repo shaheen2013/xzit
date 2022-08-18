@@ -234,9 +234,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         }
     business_type = BusinessTypesSerializer(many=True)
     business_sub_type = BusinessTypesSerializer(many=True)
+    full_name = serializers.SerializerMethodField(method_name='get_full_name')
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'role')
+        fields = ('id', 'first_name', 'last_name','full_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'role','is_active', )
+    def get_full_name(self, instance:User):
+        return instance.name()
 
 class MerchantProfileSerializer(serializers.ModelSerializer):
     business_type = BusinessTypesSerializer(many=True)
@@ -244,10 +247,15 @@ class MerchantProfileSerializer(serializers.ModelSerializer):
             'id': {'read_only': True},
             'role': {'read_only': True},
         }
+
+    
+    full_name = serializers.SerializerMethodField(method_name='get_full_name')
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'gender', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address', 'business_hours', 'amenties')
-        
+        fields = ('id', 'first_name', 'last_name','full_name', 'gender', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address', 'business_hours', 'amenties','is_active',)
+
+    def get_full_name(self, instance:User):
+        return instance.name()    
 class PermissionSerializer(serializers.ModelSerializer):
     
     class Meta: 
