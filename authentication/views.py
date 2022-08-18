@@ -373,10 +373,16 @@ class XzitPermissionAPIView(generics.ListAPIView):
 
         objects = {}
 
+        removal_permission = []
+
         for permission in queryset:
+            if permission['content_type__model'] in removal_permission:
+                continue
             objects[permission['content_type__model']]= []
 
         for permission in queryset:
+            if permission['content_type__model'] in removal_permission:
+                continue
             objects[permission['content_type__model']].append(permission)
         
         return Response({'permissions':objects})
