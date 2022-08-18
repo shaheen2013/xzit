@@ -23,7 +23,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('user/report', views.UserReportApiView.as_view()),
-    path('permissions/', views.PermissionAPIView.as_view(), name="permissions"),
+    path('permissions/', views.XzitPermissionAPIView.as_view(), name="permissions"),
     path('roles/', views.RolesCreateListApiView.as_view()),
     path('roles/<int:id>/', views.RolesRetriveUpdateDestroyAPIView.as_view()),
     path('user/check-username/<str:username>/', views.UsernameCheckAPIView.as_view(), name="check_username"),
@@ -33,5 +33,5 @@ urlpatterns = [
 
     # user_permission branch
     path('user/list/', views.UserListAPIView.as_view()),
-    path('model/list/', views.XzitPermissionAPIView.as_view()),
+    # path('model/list/', views.XzitPermissionAPIView.as_view()),
 ]
