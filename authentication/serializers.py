@@ -312,3 +312,22 @@ class BusinessInterestSubSerializer(serializers.Serializer):
 class BusinessInterestSerializer(serializers.Serializer):
     type = serializers.ListField(child=BusinessInterestSubSerializer())
 
+
+
+
+
+class ModelLabelPermissionSeralizer(serializers.ModelSerializer):
+    class Meta: 
+        model = Permission 
+        fields = ['id', 'name']
+
+
+from django.contrib.contenttypes.models import ContentType
+
+class ContentTypeSerializer(serializers.ModelSerializer):
+    permissions = ModelLabelPermissionSeralizer(many = True, source='content_type_set')
+    class Meta:
+        model = ContentType
+        fields = ['id', 'model', 'permissions']
+
+    

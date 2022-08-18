@@ -2,7 +2,7 @@ from re import A
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from authentication.models import User
+from authentication.models import User, XzitPermission
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
@@ -33,3 +33,11 @@ class UserAdmin(UserAdmin):
         }),
     )
 
+
+@admin.register(XzitPermission)
+class XzitePermissionAdmin(admin.ModelAdmin):
+    list_display = ['name', 'content_type']
+    # list_select_related = True
+    fieldsets = ((None, {
+            'fields': ('name',)
+        }),)

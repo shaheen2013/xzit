@@ -80,3 +80,19 @@ Group.add_to_class('active', models.BooleanField(default=True))
 
 class UserSocial(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+
+
+from django.contrib.auth.models import Permission
+from django.db.models import Q
+# user_permission branch 
+
+class PermissionManager(models.Manager):
+    q_query = Q(content_type_id__model='post') | Q(content_type_id__model='ad') | Q(content_type_id__model='activity') | Q(content_type_id__model='reservation') | Q(content_type_id__model='adinvitation')
+
+    def get_queryset(self):
+        return super().get_queryset().filter(self.q_query)
+class XzitPermission(Permission):
+    objects = PermissionManager()
+    class Meta:
+        proxy = True 

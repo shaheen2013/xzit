@@ -2,7 +2,7 @@ from urllib import response
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from authentication import serializers
-from authentication.models import User
+from authentication.models import User, XzitPermission
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
@@ -360,5 +360,26 @@ class UserListAPIView(generics.ListAPIView):
     pagination_class = CustomPagination
 
 
+
+# from django.contrib.contenttypes.models import ContentType
+from json import dumps
+from rest_framework.parsers import JSONParser
+class XzitPermissionAPIView(generics.ListAPIView):
+    queryset = XzitPermission.objects.all()
+    serializer_class = serializers.ContentTypeSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = XzitPermission.objects.select_related('content_type').values('id', 'name', 'content_type__model')
+
+        objects = {
+            'post':[],
+            'ad':[],
+            'reservation':[],
+            'adinvitation':[]
+        }
+        for permission in queryset:
+            objects[permission['content_type__model']].append(permission)
+        
+        return Response({'permissions':objects})
 
 

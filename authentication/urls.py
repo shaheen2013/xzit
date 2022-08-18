@@ -33,4 +33,5 @@ urlpatterns = [
 
     # user_permission branch
     path('user/list/', views.UserListAPIView.as_view()),
+    path('model/list/', views.XzitPermissionAPIView.as_view()),
 ]
