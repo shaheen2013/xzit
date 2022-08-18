@@ -3,11 +3,13 @@ from django.contrib import admin
 
 from activity.models import Post, PostComment, PostLike, Story, PostImage
 
+class PostImageInline(admin.TabularInline):
+    model = PostImage
 
-# Register your models here.
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ['created_by', 'created_at', 'likes']
+    inlines = (PostImageInline,)
 
     def likes(self, *args, **kwargs):
         post_id = args[0].id
