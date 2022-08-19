@@ -150,7 +150,7 @@ class Login(generics.GenericAPIView):
 class AdminLogin(Login):
     serializer_class = serializers.AdminLoginSerializer
     def post(self, request, *args, **kwargs):
-        """ Login system: Admin. """
+        """ Login system: User and Merchent both. """
         User = get_user_model()
         username = request.data.get('email')
         password = request.data.get('password')
@@ -164,8 +164,8 @@ class AdminLogin(Login):
         if (not user.check_password(password)):
             raise exceptions.AuthenticationFailed('wrong password')
         
-        # if user.is_verified is not True: 
-        #     return Response({'details' : 'You are not OTP verified. Please verify your OTP'})
+        if user.is_verified is not True: 
+            return Response({'details' : 'You are not OTP verified. Please verify your OTP'})
         
         response.data = serializers.LoginSuccessSerializer(user).data
         return response
@@ -359,7 +359,7 @@ class UserListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
 
-from functools import reduce
+
 
 # from django.contrib.contenttypes.models import ContentType
 from json import dumps
@@ -367,7 +367,7 @@ from rest_framework.parsers import JSONParser
 class XzitPermissionAPIView(generics.ListAPIView):
     queryset = XzitPermission.objects.all()
     serializer_class = serializers.ContentTypeSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         queryset = Permission.objects.select_related('content_type').values('id', 'name', 'content_type__model')
@@ -375,19 +375,57 @@ class XzitPermissionAPIView(generics.ListAPIView):
         objects = {}
 
         removal_permission = []
-
+        names = {}
         for permission in queryset:
             if permission['content_type__model'] in removal_permission:
                 continue
-            objects[permission['content_type__model']]= []
+            names[permission['content_type__model']]= []
+        formateNames = []
+        for name in names:
+            data = []
+            for permission in queryset:
+                if permission['content_type__model'] in removal_permission:
+                    continue
+                if permission['content_type__model'] == name:
+                    data.append(permission)
+                    print(permission)
+                    print(name)
+            item = {
+                'name': name,
+                'data': data
+            }
+            formateNames.append(item)
+                        
 
-        for permission in queryset:
-            if permission['content_type__model'] in removal_permission:
-                continue
-            objects[permission['content_type__model']].append(permission)
+        # for index, permission in enumerate(queryset.values()):
+        #     if permission['content_type__model'] in removal_permission:
+        #         continue
+        #     # objects[permission['content_type__model']].append(permission)
+        #     item = {
+        #         'data': permission
+        #     }
+        #     formateNames['data'] = permission
         
+        return Response({'permissions': formateNames})
     
+    
+    # def list(self, request, *args, **kwargs):
+    #     queryset = Permission.objects.select_related('content_type').values('id', 'name', 'content_type__model')
+
+    #     objects = {}
+
+    #     removal_permission = []
+
+    #     for permission in queryset:
+    #         if permission['content_type__model'] in removal_permission:
+    #             continue
+    #         objects[permission['content_type__model']]= []
+
+    #     for permission in queryset:
+    #         if permission['content_type__model'] in removal_permission:
+    #             continue
+    #         objects[permission['content_type__model']].append(permission)
         
-        return Response({'permissions': objects })
+    #     return Response({'permissions':objects})
 
 
