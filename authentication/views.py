@@ -164,8 +164,8 @@ class AdminLogin(Login):
         if (not user.check_password(password)):
             raise exceptions.AuthenticationFailed('wrong password')
         
-        if user.is_verified is not True: 
-            return Response({'details' : 'You are not OTP verified. Please verify your OTP'})
+        # if user.is_verified is not True: 
+        #     return Response({'details' : 'You are not OTP verified. Please verify your OTP'})
         
         response.data = serializers.LoginSuccessSerializer(user).data
         return response
