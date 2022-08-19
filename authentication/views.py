@@ -367,7 +367,7 @@ from rest_framework.parsers import JSONParser
 class XzitPermissionAPIView(generics.ListAPIView):
     queryset = XzitPermission.objects.all()
     serializer_class = serializers.ContentTypeSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         queryset = Permission.objects.select_related('content_type').values('id', 'name', 'content_type__model')
@@ -388,8 +388,7 @@ class XzitPermissionAPIView(generics.ListAPIView):
                     continue
                 if permission['content_type__model'] == name:
                     data.append(permission)
-                    print(permission)
-                    print(name)
+        
             item = {
                 'name': name,
                 'data': data
