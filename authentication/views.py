@@ -386,6 +386,6 @@ class XzitPermissionAPIView(generics.ListAPIView):
                 continue
             objects[permission['content_type__model']].append(permission)
         
-        return Response({'permissions':objects})
+        return Response({'permissions':objects.values()})
 
 
