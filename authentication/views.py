@@ -359,7 +359,7 @@ class UserListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
 
-
+from functools import reduce
 
 # from django.contrib.contenttypes.models import ContentType
 from json import dumps
@@ -386,6 +386,8 @@ class XzitPermissionAPIView(generics.ListAPIView):
                 continue
             objects[permission['content_type__model']].append(permission)
         
-        return Response({'permissions':objects.values()})
+    
+        
+        return Response({'permissions': objects })
 
 
