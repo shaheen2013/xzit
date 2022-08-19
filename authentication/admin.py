@@ -6,7 +6,7 @@ from authentication.models import User, XzitPermission
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
-    list_display = ['first_name', 'email', 'auth_provider','is_verified',  'is_staff', 'role','created_at']
+    list_display = ['username', 'email', 'auth_provider','is_verified',  'is_staff', 'role','created_at']
     fieldsets = (
         (None, {
             'fields': ('username', 'password')

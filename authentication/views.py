@@ -150,7 +150,7 @@ class Login(generics.GenericAPIView):
 class AdminLogin(Login):
     serializer_class = serializers.AdminLoginSerializer
     def post(self, request, *args, **kwargs):
-        """ Login system: User and Merchent both. """
+        """ Login system: Admin. """
         User = get_user_model()
         username = request.data.get('email')
         password = request.data.get('password')
@@ -164,8 +164,8 @@ class AdminLogin(Login):
         if (not user.check_password(password)):
             raise exceptions.AuthenticationFailed('wrong password')
         
-        if user.is_verified is not True: 
-            return Response({'details' : 'You are not OTP verified. Please verify your OTP'})
+        # if user.is_verified is not True: 
+        #     return Response({'details' : 'You are not OTP verified. Please verify your OTP'})
         
         response.data = serializers.LoginSuccessSerializer(user).data
         return response
