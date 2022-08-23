@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import generics
 from yaml import serialize
-from activity.models import Post, PostComment, PostImage, PostLike, PostSave, Story
+from activity.models import Post, PostComment, PostImage, PostLike, PostSave, PostShare, Story
 from activity import serializers
 from rest_framework.permissions import IsAuthenticated
 from common.models import Report
@@ -193,3 +193,14 @@ class PostSaveAPIView(generics.CreateAPIView):
     queryset = PostSave
     serializer_class = serializers.PostSaveSerializerPost
     permission_classes = [IsAuthenticated]
+
+
+from rest_framework.viewsets import ModelViewSet
+class PostShareAPIView(ModelViewSet):
+    queryset = PostShare.objects.all()
+    serializer_class = serializers.PostShareSerializerGet
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST','PUT', 'PATCH']:
+            return serializers.PostShareSerializerPost
+        return serializers.PostShareSerializerGet

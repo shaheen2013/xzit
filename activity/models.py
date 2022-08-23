@@ -39,6 +39,11 @@ class PostSave(TimeStampMixin, AuthorMixin):
        
        class Meta:
               db_table = "save_posts"
+
+class PostShare(TimeStampMixin, AuthorMixin):
+       post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_share')
+       
+       
               
               
 class Story(TimeStampMixin, AuthorMixin):

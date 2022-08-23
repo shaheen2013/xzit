@@ -1,6 +1,10 @@
 from django.urls import path
 
 from activity import views
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'postshare', views.PostShareAPIView , basename='share_post')
 
 urlpatterns = [
     path('posts/', views.PostCreateApiView.as_view()),
@@ -21,4 +25,4 @@ urlpatterns = [
 
     path('posts/images/', views.PostImageAPIView.as_view()),
     path('posts/saves/', views.PostSaveAPIView.as_view()),
-]
+] + router.urls
