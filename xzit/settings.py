@@ -124,7 +124,7 @@ WSGI_APPLICATION = 'xzit.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.' + config('DB_ENGINE', 'mysql'),
-        'NAME': config('DB_NAME', 'hr_mediusware'),
+        'NAME': config('DB_NAME', 'xzit'),
         'USER': config('DB_USERNAME', 'root'),
         'PASSWORD': config('DB_PASSWORD', 'root'),
         'HOST': config('DB_HOST', 'localhost'),
