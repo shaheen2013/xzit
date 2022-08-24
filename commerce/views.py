@@ -21,7 +21,7 @@ class BusinessTypeApiView(ModelViewSet):
 
 class GetBussinessTypeApiView(ListAPIView):
     serializer_class = serializers.BusinessTypeSerializer
-    queryset = models.BusinessType.objects.all()
+    queryset = models.BusinessType.objects.filter(parent=None).all()
     
 
 class SingleBusinessTypeApiView(RetrieveAPIView):
