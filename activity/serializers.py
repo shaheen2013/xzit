@@ -101,9 +101,10 @@ class PostSerializerPostPutPatch(serializers.ModelSerializer):
 
 class PostShareSerializerGet(serializers.ModelSerializer):
     post = PostSerializerGet()
+    share_by = serializers.IntegerField(source='created_by_id')
     class Meta:
         model = PostSave
-        fields = ('id','post','created_by',)
+        fields = ('id','post','share_by',)
 
 class PostShareSerializerPost(serializers.ModelSerializer):
     class Meta:

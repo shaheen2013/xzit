@@ -197,9 +197,14 @@ class PostSaveAPIView(generics.CreateAPIView):
 
 from rest_framework.viewsets import ModelViewSet
 class PostShareAPIView(ModelViewSet):
+    http_method_names = ['get', 'post', 'delete']
     queryset = PostShare.objects.all()
     serializer_class = serializers.PostShareSerializerGet
+    permission_classes= [IsAuthenticated]
 
+
+    def get_queryset(self):
+        return PostShare.objects.select_related('post').filter(created_by=self.request.user.id).all()
     def get_serializer_class(self):
         if self.request.method in ['POST','PUT', 'PATCH']:
             return serializers.PostShareSerializerPost
