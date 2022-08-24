@@ -1,6 +1,6 @@
 from rest_framework import serializers, status
 from rest_framework.response import Response
-from activity.models import Post, PostComment, PostImage, PostLike, PostSave, Story
+from activity.models import Post, PostComment, PostImage, PostLike, PostSave, PostShare, Story
 from django_q.tasks import async_task
 from authentication.serializers import UserProfileSerializer
 
@@ -64,6 +64,7 @@ class PostSaveSerializerGet(serializers.ModelSerializer):
 
 
 
+
 class PostSerializerGet(serializers.ModelSerializer):
     created_by = UserProfileSerializer()
     postimages = PostImageUrlSerializer(many=True, read_only=True, source='postimage')
@@ -95,7 +96,34 @@ class PostSerializerPostPutPatch(serializers.ModelSerializer):
         fields = ('id','description', 'location')
     
 
-      
+
+
+
+class PostShareSerializerGet(serializers.ModelSerializer):
+    post = PostSerializerGet()
+    share_by = serializers.IntegerField(source='created_by_id')
+    class Meta:
+        model = PostSave
+        fields = ('id','post','share_by',)
+
+class PostShareSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = PostShare
+        fields = ('post',)
+        
+    # def create(self, validated_data):
+    #     user = self.context['request'].user
+    #     post = validated_data.get('post')
+    #     userPostSave = PostSave.objects.filter(created_by=user, post_id=post.id).first()
+    #     if userPostSave is not None:
+    #         userPostSave.delete()
+    #         return userPostSave
+    #     instance = self.Meta.model(**validated_data)
+    #     instance.save()
+    #     return instance
+
+
+
 
 
 class PostManageSerializer(serializers.ModelSerializer):
