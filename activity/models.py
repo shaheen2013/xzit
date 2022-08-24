@@ -2,7 +2,7 @@ from pyexpat import model
 from django.db import models
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
 from django.core.validators import FileExtensionValidator
-
+import uuid
 
 # Create your models here.
 class Post(TimeStampMixin, AuthorMixin):
@@ -13,6 +13,7 @@ class Post(TimeStampMixin, AuthorMixin):
        
        class Meta:
               db_table="posts"
+              ordering = ('-created_at',)
               
        def __str__(self):
               return f"{self.created_by}"
@@ -59,6 +60,7 @@ class Story(TimeStampMixin, AuthorMixin):
 
        class Meta:
               db_table = "stories"
+              ordering = ('-created_at',)
               
               
 class StoryViewer(TimeStampMixin, AuthorMixin):
@@ -88,6 +90,7 @@ class PostImage(TimeStampMixin, AuthorMixin):
               super().save(*args, **kwargs)
 
        def reduce_image_size(self, profile_pic):
+              prepix = uuid.uuid4().hex[:].upper()
               name, extension = os.path.splitext(profile_pic.name)
               if extension == '.jpg':
                      format = 'jpeg'
@@ -96,5 +99,5 @@ class PostImage(TimeStampMixin, AuthorMixin):
               img = Image.open(profile_pic)
               thumb_io = BytesIO()
               img.save(thumb_io, format=format, quality=50)
-              new_image = File(thumb_io, name=profile_pic.name)
+              new_image = File(thumb_io, name=prepix+extension)
               return new_image
