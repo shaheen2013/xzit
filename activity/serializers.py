@@ -103,13 +103,13 @@ class PostShareSerializerGet(serializers.ModelSerializer):
     post = PostSerializerGet()
     share_by = serializers.IntegerField(source='created_by_id')
     class Meta:
-        model = PostSave
-        fields = ('id','post','share_by',)
+        model = PostShare
+        fields = ('id', 'post', 'comment', 'share_by',)
 
 class PostShareSerializerPost(serializers.ModelSerializer):
     class Meta:
         model = PostShare
-        fields = ('post',)
+        fields = ('post','comment')
         
     # def create(self, validated_data):
     #     user = self.context['request'].user

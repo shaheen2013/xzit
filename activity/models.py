@@ -43,6 +43,7 @@ class PostSave(TimeStampMixin, AuthorMixin):
 
 class PostShare(TimeStampMixin, AuthorMixin):
        post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_share')
+       comment = models.TextField(null=True, blank=True)
        
        
               
