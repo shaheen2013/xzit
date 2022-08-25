@@ -257,7 +257,7 @@ class MerchantProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(method_name='get_full_name')
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name','full_name', 'gender', 'birth_date', 'bio', 'location', 'country', 'city', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address', 'business_hours', 'amenties','is_active',)
+        fields = ('id', 'first_name', 'last_name','full_name', 'gender', 'birth_date', 'bio', 'location', 'country', 'city', 'phone','business_name', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address', 'business_hours', 'amenties','is_active',)
 
     def get_full_name(self, instance:User):
         return instance.name()    
