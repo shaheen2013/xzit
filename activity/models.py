@@ -2,7 +2,10 @@ from pyexpat import model
 from django.db import models
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
 from django.core.validators import FileExtensionValidator
-import uuid
+
+
+import os
+from xzit.mixins.image_optimizer import reduce_image_size
 
 # Create your models here.
 class Post(TimeStampMixin, AuthorMixin):
@@ -72,10 +75,7 @@ class StoryViewer(TimeStampMixin, AuthorMixin):
 
 
 
-from PIL import Image
-from io import BytesIO
-from django.core.files import File
-import os 
+
 
 class PostImage(TimeStampMixin, AuthorMixin):
        post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='postimage')
@@ -83,21 +83,9 @@ class PostImage(TimeStampMixin, AuthorMixin):
 
 
        def save(self, *args, **kwargs):
-              name, extension = os.path.splitext(self.image_path.name)
-              if extension in ['.jpg','.png','.jpeg']:
-                     new_image = self.reduce_image_size(self.image_path)
-                     self.image_path = new_image
+              if self.image_path.name is not None:
+                     name, extension = os.path.splitext(self.image_path.name)
+                     if extension in ['.jpg','.png','.jpeg']:
+                            new_image = reduce_image_size(self.image_path)
+                            self.image_path = new_image
               super().save(*args, **kwargs)
-
-       def reduce_image_size(self, profile_pic):
-              prepix = uuid.uuid4().hex[:].upper()
-              name, extension = os.path.splitext(profile_pic.name)
-              if extension == '.jpg':
-                     format = 'jpeg'
-              else:
-                     format = 'png'
-              img = Image.open(profile_pic)
-              thumb_io = BytesIO()
-              img.save(thumb_io, format=format, quality=50)
-              new_image = File(thumb_io, name=prepix+extension)
-              return new_image

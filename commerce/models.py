@@ -4,6 +4,8 @@ from xzit.mixins.models import AuthorMixin, TimeStampMixin
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
+import os 
+from xzit.mixins.image_optimizer import reduce_image_size
 
 class BusinessTypeManager(TreeManager):
     def viewable(self):
@@ -95,6 +97,15 @@ class AdBanner(TimeStampMixin):
 
     class Meta:
         db_table = "ad_banners"
+
+    def save(self, *args, **kwargs):
+        if self.image_path.name is not None:
+            name, extension = os.path.splitext(self.image_path.name)
+            if extension in ['.jpg','.png','.jpeg']:
+                new_image = reduce_image_size(self.image_path)
+                self.image_path = new_image
+        super().save(*args, **kwargs)
+
 
 
 class AdComment(AuthorMixin, TimeStampMixin):

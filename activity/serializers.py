@@ -28,7 +28,7 @@ class PostCommentShowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PostComment
-        fields = ['id', 'post', 'created_by', 'comment']  
+        fields = ['id', 'post', 'created_by', 'comment',  'created_at']  
 
 
 class PostLikeSerializer(serializers.ModelSerializer):
@@ -64,7 +64,7 @@ class PostSaveSerializerGet(serializers.ModelSerializer):
 
 
 
-
+from datetime import datetime
 class PostSerializerGet(serializers.ModelSerializer):
     created_by = UserProfileSerializer()
     postimages = PostImageUrlSerializer(many=True, read_only=True, source='postimage')
@@ -76,6 +76,12 @@ class PostSerializerGet(serializers.ModelSerializer):
     }
     post_likes = serializers.SerializerMethodField(method_name='count_likes')
     post_save = PostSaveSerializerGet(many=True, source='postSave')
+    # created_at = serializers.SerializerMethodField(method_name='get_created_at')
+
+    # def get_created_at(self, instance: Post):
+    #     f = '%Y-%m-%d %H:%M:%S.%f%z'
+    #     print(datetime.strptime(instance.created_at, f))
+    #     return instance.created_at
 
     def count_likes(self, instance: Post):
         count = instance.postlike.all().count()
@@ -83,7 +89,7 @@ class PostSerializerGet(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'description', 'location', 'created_by', 'postimages', 'postcomments','post_likes','post_liker','post_save')
+        fields = ('id', 'description', 'location', 'created_by', 'postimages', 'postcomments','post_likes','post_liker','post_save','created_at')
     
 
 class PostSerializerPostPutPatch(serializers.ModelSerializer):

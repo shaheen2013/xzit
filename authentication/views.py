@@ -33,6 +33,7 @@ class UserBasicInfoUpdateApiView(generics.UpdateAPIView):
     serializer_class = serializers.UserBasicInfoUpdateSerializer
     lookup_field = "id"
     queryset = User
+    parser_classes = (MultiPartParser, FormParser)
     
 class MerchantRegisterApiView(generics.CreateAPIView):
     serializer_class = serializers.MerchantRegisterSerializer
@@ -42,6 +43,7 @@ class MerchantBasicInfoUpdateApiView(generics.UpdateAPIView):
     serializer_class = serializers.MerchantBasicInfoUpdateSerializer
     lookup_field = "id"
     queryset = User
+    parser_classes = [FormParser]
     
 class UserProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.UserProfileSerializer
@@ -52,10 +54,10 @@ class UserProfileApiView(generics.RetrieveUpdateAPIView):
 
 class MerchantProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.MerchantProfileSerializer
-    # parser_classes = (MultiPartParser, FormParser)
     queryset = User.objects.all()
     lookup_field = "id"
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
     
 class ChangePasswordApiView(generics.UpdateAPIView):
     serializer_class = serializers.ChangePasswordSerializer

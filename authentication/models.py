@@ -8,6 +8,9 @@ from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail
 from django.contrib.auth.models import Group
 
+import os 
+from xzit.mixins.image_optimizer import reduce_image_size
+
 AUTH_PROVIDERS = {'facebook': 'Facebook','google': 'Google', 'username': 'Username'}
 
 class User(AbstractUser, TimeStampMixin):
@@ -74,6 +77,21 @@ class User(AbstractUser, TimeStampMixin):
         if group is not None:
             return group.name
         return 'No Role'
+
+    def save(self, *args, **kwargs):
+        if self.profile_image.name is not None:
+            print(self.profile_image)
+            profile_image_name, profile_image_extension = os.path.splitext(self.profile_image.name)
+            if profile_image_extension in ['.jpg','.png','.jpeg']:
+                    new_image = reduce_image_size(self.profile_image)
+                    self.profile_image = new_image
+
+        if self.cover_image.name is not None:
+            cover_image_name, cover_image_extension = os.path.splitext(self.cover_image.name)
+            if cover_image_extension in ['.jpg','.png','.jpeg']:
+                    new_image = reduce_image_size(self.cover_image)
+                    self.cover_image = new_image
+        super().save(*args, **kwargs)
 
 Group.add_to_class('active', models.BooleanField(default=True))
 

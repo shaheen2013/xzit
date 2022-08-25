@@ -94,8 +94,8 @@ class UserBasicInfoUpdateSerializer(serializers.ModelSerializer):
 class MerchantRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'username',
-                  'email', 'phone', 'password', 'tokens', 'otp', 'profile_image')
+        fields = ('id', 'username',
+                  'email', 'phone', 'password', 'tokens', 'otp')
         extra_kwargs = {
             'password': {'write_only': True},
             'otp': {'read_only': True},
@@ -123,14 +123,15 @@ class MerchantRegisterSerializer(serializers.ModelSerializer):
         return instance
 
 
+
+
 class MerchantBasicInfoUpdateSerializer(serializers.ModelSerializer):
     extra_kwargs = {
         'id': {'read_only': True}
     }
     class Meta:
         model = User
-        fields = ('id','business_name', 'business_manager', 'business_type',
-                  'business_address', 'country', 'city', 'bio', 'amenties', 'location')
+        fields = ('id', 'profile_image','business_name', 'business_manager', 'business_type', 'business_address', 'country', 'city', 'bio', 'amenties', 'location')
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -242,17 +243,21 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return instance.name()
 
 class MerchantProfileSerializer(serializers.ModelSerializer):
-    business_type = BusinessTypesSerializer(many=True)
+    # business_type = BusinessTypesSerializer()
+    # business_sub_type = BusinessTypesSerializer()
     extra_kwargs = {
             'id': {'read_only': True},
             'role': {'read_only': True},
         }
 
+    business_hours = serializers.CharField(required=True)
+    amenties = serializers.CharField(required=True)
+
     
     full_name = serializers.SerializerMethodField(method_name='get_full_name')
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name','full_name', 'gender', 'birth_date', 'bio', 'location', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address', 'business_hours', 'amenties','is_active',)
+        fields = ('id', 'first_name', 'last_name','full_name', 'gender', 'birth_date', 'bio', 'location', 'country', 'city', 'phone', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address', 'business_hours', 'amenties','is_active',)
 
     def get_full_name(self, instance:User):
         return instance.name()    
