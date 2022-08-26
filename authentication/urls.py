@@ -1,6 +1,10 @@
 from django.urls import path, include
 from authentication import views
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView, TokenVerifyView)
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r"amenities", views.AmenitiesAPIView, basename='amenities')
 
 urlpatterns = [
     path('user/signup/', views.UserRegisterApiView.as_view(), name='user_signup'),
@@ -34,4 +38,5 @@ urlpatterns = [
     # user_permission branch
     path('user/list/', views.UserListAPIView.as_view()),
     # path('model/list/', views.XzitPermissionAPIView.as_view()),
-]
+    
+] + router.urls

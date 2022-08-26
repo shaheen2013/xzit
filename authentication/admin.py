@@ -2,7 +2,7 @@ from re import A
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from authentication.models import User, XzitPermission
+from authentication.models import User, XzitPermission, BusinessHour, Amenities
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
@@ -15,7 +15,7 @@ class UserAdmin(UserAdmin):
             'fields': ('first_name', 'last_name', 'email', 'phone', 'profile_image', 'cover_image', 'gender', 'birth_date', 'country_code', 'country', 'city', 'address', 'latitude')
         }),
         ('Business info', {
-            'fields': ('business_name', 'business_manager', 'business_type', 'business_days', 'amenties')
+            'fields': ('business_name', 'business_manager', 'business_type', 'amenties')
         }),
         ('Permissions', {
             'fields': (
@@ -41,3 +41,6 @@ class XzitePermissionAdmin(admin.ModelAdmin):
     fieldsets = ((None, {
             'fields': ('name',)
         }),)
+
+admin.site.register(Amenities)
+admin.site.register(BusinessHour)

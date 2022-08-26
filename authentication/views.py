@@ -2,7 +2,7 @@ from urllib import response
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from authentication import serializers
-from authentication.models import User, XzitPermission
+from authentication.models import Amenities, BusinessHour, User, XzitPermission
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
@@ -54,10 +54,27 @@ class UserProfileApiView(generics.RetrieveUpdateAPIView):
 
 class MerchantProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.MerchantProfileSerializer
-    queryset = User.objects.all()
+    queryset = User.objects.prefetch_related('amenties').prefetch_related('authentication_businesshour_related').all()
     lookup_field = "id"
-    # permission_classes = [IsAuthenticated]
-    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [IsAuthenticated]
+    # parser_classes = (MultiPartParser, FormParser)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        BusinessHour.objects.filter(created_by_id=request.user.id).delete()
+        for business_hour in request.data.get('business_hours'):
+            business = BusinessHour.objects.create(**business_hour,created_by_id=request.user.id)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST','PUT', 'PATCH']:
+            return serializers.MerchantProfileSerializerPost
+        return serializers.MerchantProfileSerializer
     
 class ChangePasswordApiView(generics.UpdateAPIView):
     serializer_class = serializers.ChangePasswordSerializer
@@ -430,3 +447,8 @@ class XzitPermissionAPIView(generics.ListAPIView):
     #     return Response({'permissions':objects})
 
 
+
+from rest_framework.viewsets import ModelViewSet
+class AmenitiesAPIView(ModelViewSet):
+    queryset = Amenities.objects.all()
+    serializer_class = serializers.AmenitiesSerializer

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from rest_framework_simplejwt.tokens import RefreshToken
-from xzit.mixins.models import TimeStampMixin
+from xzit.mixins.models import AuthorWithTimeStampMixin, TimeStampMixin
 from django.dispatch import receiver
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
@@ -45,14 +45,15 @@ class User(AbstractUser, TimeStampMixin):
     business_manager = models.CharField(max_length=255, null=True, blank=True)
     business_type = models.ManyToManyField('commerce.BusinessType', related_name='user_business_type')
     business_sub_type = models.ManyToManyField('commerce.BusinessType', related_name='user_business_sub_type')
-    business_days = models.CharField(max_length=255, null=True, blank=True)
-    business_hours = models.CharField(max_length=255, null=True, blank=True)
+    # business_days = models.CharField(max_length=255, null=True, blank=True)
+    # business_hours = models.CharField(max_length=255, null=True, blank=True)
     business_phone = models.CharField(max_length=255, null=True, blank=True)
     business_address = models.TextField(null=True, blank=True)
     
     bio = models.TextField(null=True, blank=True)
     
-    amenties = models.CharField(max_length=255, null=True, blank=True)
+    amenties = models.ManyToManyField('Amenities')
+
     
     device_type = models.CharField(max_length=255, null=True, blank=True)
     
@@ -114,3 +115,22 @@ class XzitPermission(Permission):
     objects = PermissionManager()
     class Meta:
         proxy = True 
+
+
+class Amenities(models.Model):
+    facility = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.facility
+
+
+class BusinessHour(AuthorWithTimeStampMixin):
+    day = models.CharField(null=True, blank=True, max_length=100)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    description = models.TextField()
+
+    def __str__(self) -> str:
+        return self.created_by.username 
+
+

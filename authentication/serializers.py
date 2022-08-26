@@ -1,7 +1,7 @@
 from tokenize import group
 from rest_framework.response import Response
 from rest_framework import serializers
-from authentication.models import User
+from authentication.models import Amenities, BusinessHour, User
 from commerce.models import BusinessType
 from common.models import Report
 from rest_framework.exceptions import ValidationError
@@ -10,6 +10,19 @@ from xzit.emails import send_otp, send_reset_otp
 from django.contrib.auth import password_validation as password_validator
 from django.core import exceptions
 
+
+
+class AmenitiesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Amenities
+        fields = "__all__"
+
+
+class BusinessHourSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    day = serializers.CharField()
+    start_time = serializers.TimeField()
+    end_time = serializers.TimeField()
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -243,21 +256,35 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return instance.name()
 
 class MerchantProfileSerializer(serializers.ModelSerializer):
-    # business_type = BusinessTypesSerializer()
-    # business_sub_type = BusinessTypesSerializer()
     extra_kwargs = {
             'id': {'read_only': True},
             'role': {'read_only': True},
         }
 
-    business_hours = serializers.CharField(required=True)
-    amenties = serializers.CharField(required=True)
+    business_hours = BusinessHourSerializer(required=True, many=True, source='authentication_businesshour_related')
+    amenties = AmenitiesSerializer(many=True, read_only=True)
     class Meta:
         model = User
-        fields = ('id', 'gender', 'birth_date', 'bio', 'location', 'country', 'city', 'phone','business_name', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address', 'business_hours', 'amenties','is_active',)
+        fields = ('id', 'gender', 'birth_date', 'bio', 'location', 'country', 'city', 'phone','business_name', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address','business_hours', 'amenties','is_active',)
 
     def get_full_name(self, instance:User):
         return instance.name()    
+
+
+
+class MerchantProfileSerializerPost(serializers.ModelSerializer):
+    extra_kwargs = {
+            'id': {'read_only': True},
+            'role': {'read_only': True},
+        }
+
+    business_hours = BusinessHourSerializer(required=True, many=True)
+    class Meta:
+        model = User
+        fields = ('id', 'gender', 'birth_date', 'bio', 'location', 'country', 'city', 'phone','business_name', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address','business_hours', 'amenties','is_active',)
+
+
+    
 class PermissionSerializer(serializers.ModelSerializer):
     
     class Meta: 
