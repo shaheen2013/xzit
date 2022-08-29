@@ -142,9 +142,10 @@ class MerchantBasicInfoUpdateSerializer(serializers.ModelSerializer):
     extra_kwargs = {
         'id': {'read_only': True}
     }
+    business_hours = BusinessHourSerializer(required=False, many=True)
     class Meta:
         model = User
-        fields = ('id', 'profile_image','business_name', 'business_manager', 'business_type', 'business_address', 'country', 'city', 'bio', 'amenties', 'location')
+        fields = ('id', 'profile_image', 'business_name', 'business_hours', 'business_manager', 'business_address', 'country', 'city', 'bio', 'amenties', 'location')
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -278,7 +279,7 @@ class MerchantProfileSerializerPost(serializers.ModelSerializer):
             'role': {'read_only': True},
         }
 
-    business_hours = BusinessHourSerializer(required=True, many=True)
+    business_hours = BusinessHourSerializer(required=True, many=True, source='authentication_businesshour_related')
     class Meta:
         model = User
         fields = ('id', 'gender', 'birth_date', 'bio', 'location', 'country', 'city', 'phone','business_name', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address','business_hours', 'amenties','is_active',)
@@ -348,9 +349,6 @@ class BusinessInterestSubSerializer(serializers.Serializer):
 
 class BusinessInterestSerializer(serializers.Serializer):
     type = serializers.ListField(child=BusinessInterestSubSerializer())
-
-
-
 
 
 class ModelLabelPermissionSeralizer(serializers.ModelSerializer):
