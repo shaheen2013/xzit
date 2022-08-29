@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            color: #414141;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .image {
+            margin: 30px 0px;
+        }
+
+        .otp-code {
+            margin: 30px 0px;
+        }
+
+        span {
+            color: #EC2D2D;
+            font-family: Poppins;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 27px;
+            letter-spacing: 1em;
+            text-align: center;
+            border: 2px solid #EC2D2D;
+            border-radius: 5px;
+            padding: 10px 0px 10px 15px;
+        }
+        p{
+            margin: 30px 0px;
+            width: 80%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="image">
+        <center>
+            <img src="{{ BASE_URL }} {% static 'xzit-logo.png' %}" alt="" srcset="">
+            {% comment %} <img src="https://xzitserv.xyz/xzit-logo.png" alt="" srcset=""> {% endcomment %}
+        </center>
+    </div>
+    <div class="heading">
+        <center>
+            <h3>
+                To verify your email address, please use the
+                <br>
+                following One Time Password (OTP).
+            </h3>
+        </center>
+    </div>
+    <div class="otp-code">
+        <center>
+            <span>{{ otp }}</span>
+        </center>
+    </div>
+    <div class="description">
+        <center>
+            <p>
+                Please do not share this OTP code to anyone. XZIT takes your account security verify seriously.
+                <br />
+                XZIT Customer Service will never ask you to disclose or verify your XZIT password, OTP code, credit card
+                or bank number.
+                <br />
+                If you receive a suspicious email with a link to update your account information do not click on the
+                link instead, report the email to XZIT for investigation.
+                <br />
+                <br />
+                Thank You
+            </p>
+        </center>
+    </div>
+
+</body>
+
+</html>

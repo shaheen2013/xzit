@@ -2,7 +2,6 @@
 .vscode
 src/.env
 src/.env.backup
-static
 media
 *.pyc
 env
