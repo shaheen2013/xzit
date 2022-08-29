@@ -43,7 +43,7 @@ class MerchantBasicInfoUpdateApiView(generics.UpdateAPIView):
     serializer_class = serializers.MerchantBasicInfoUpdateSerializer
     lookup_field = "id"
     queryset = User
-    parser_classes = [MultiPartParser, FormParser]
+    # parser_classes = [MultiPartParser, FormParser]
     
 class UserProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.UserProfileSerializer
