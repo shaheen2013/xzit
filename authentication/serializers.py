@@ -145,8 +145,12 @@ class MerchantBasicInfoUpdateSerializer(serializers.ModelSerializer):
     business_hours = BusinessHourSerializer(required=False, many=True)
     class Meta:
         model = User
-        fields = ('id', 'profile_image', 'business_name', 'business_hours', 'business_manager', 'business_address', 'country', 'city', 'bio', 'amenties', 'location')
+        fields = ('id', 'business_name', 'business_hours', 'business_manager', 'business_address', 'country', 'city', 'bio', 'amenties', 'location')
 
+class MerchantProfileImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['profile_image']
 
 class ChangePasswordSerializer(serializers.Serializer):
     model = User

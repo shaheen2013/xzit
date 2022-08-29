@@ -44,7 +44,14 @@ class MerchantBasicInfoUpdateApiView(generics.UpdateAPIView):
     lookup_field = "id"
     queryset = User
     # parser_classes = [MultiPartParser, FormParser]
+
+class MerchantProfileImageAPIView(generics.UpdateAPIView):
+    serializer_class = serializers.MerchantProfileImageSerializer
+    parser_classes = [MultiPartParser, FormParser]
+    queryset = User.objects.all()
+    lookup_field = "id"
     
+
 class UserProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.UserProfileSerializer
     # parser_classes = (MultiPartParser, FormParser)

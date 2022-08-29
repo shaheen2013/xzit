@@ -12,6 +12,7 @@ urlpatterns = [
     path('admin/login/', views.AdminLogin.as_view(), name='admin_login'),
     path('user/profile/<int:id>/', views.UserProfileApiView.as_view(), name='user_profile'),
     path('merchant/profile/<int:id>/', views.MerchantProfileApiView.as_view(), name='merchant_profile'),
+    path('merchant/profile-image/<int:id>/', views.MerchantProfileImageAPIView.as_view(), name='merchant_profile_image'),
     path('user/<int:id>/basic-info/', views.UserBasicInfoUpdateApiView.as_view(), name='user_basic_info'),
     path('merchant/signup/', views.MerchantRegisterApiView.as_view(), name='user_signup'),
     path('merchant/<int:id>/basic-info/', views.MerchantBasicInfoUpdateApiView.as_view(), name='user_basic_info'),
