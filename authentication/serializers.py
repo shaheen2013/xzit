@@ -256,7 +256,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(method_name='get_full_name')
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name','full_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_name', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'role','is_active', )
+        fields = ('id', 'username', 'first_name', 'last_name','full_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_name', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'role','is_active' )
     def get_full_name(self, instance:User):
         return instance.name()
 
