@@ -176,7 +176,7 @@ class AdminLoginSerializer(serializers.ModelSerializer):
 class LoginSuccessSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'username', 'email', 'role', 'tokens', 'profile_image')
+        fields = ('id', 'name', 'username', 'business_name', 'email', 'role', 'tokens', 'profile_image')
 
 
 class OtpResendSerialize(serializers.Serializer):
