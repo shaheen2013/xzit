@@ -270,7 +270,7 @@ class MerchantProfileSerializer(serializers.ModelSerializer):
     amenties = AmenitiesSerializer(many=True, read_only=True)
     class Meta:
         model = User
-        fields = ('id', 'gender', 'birth_date', 'bio', 'location', 'country', 'city', 'phone','business_name', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address','business_hours', 'amenties','is_active',)
+        fields = ('id', 'username', 'gender', 'birth_date', 'bio', 'location', 'country', 'city', 'phone','business_name', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'business_manager', 'business_phone', 'business_address','business_hours', 'amenties','is_active',)
 
     def get_full_name(self, instance:User):
         return instance.name()    
