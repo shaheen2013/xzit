@@ -170,7 +170,7 @@ class Login(generics.GenericAPIView):
         if user.is_verified is not True: 
             return Response({'details' : 'You are not OTP verified. Please verify your OTP'}, status.HTTP_401_UNAUTHORIZED)
         
-        response.data = serializers.LoginSuccessSerializer(user).data
+        response.data = serializers.LoginSuccessSerializer(user, context={'request': request}).data
         return response
     
 class AdminLogin(Login):

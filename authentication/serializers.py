@@ -174,9 +174,15 @@ class AdminLoginSerializer(serializers.ModelSerializer):
 
 
 class LoginSuccessSerializer(serializers.ModelSerializer):
+    profile_image = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = ('id', 'name', 'username', 'business_name', 'email', 'role', 'tokens', 'profile_image')
+        
+    def get_profile_image(self, obj):
+        request = self.context.get('request')
+        return request.build_absolute_uri(obj.profile_image)
+        
 
 
 class OtpResendSerialize(serializers.Serializer):
