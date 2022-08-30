@@ -168,7 +168,7 @@ class Login(generics.GenericAPIView):
             raise exceptions.AuthenticationFailed('wrong password')
         
         if user.is_verified is not True: 
-            return Response({'details' : 'You are not OTP verified. Please verify your OTP'})
+            return Response({'details' : 'You are not OTP verified. Please verify your OTP'}, status.HTTP_401_UNAUTHORIZED)
         
         response.data = serializers.LoginSuccessSerializer(user).data
         return response
