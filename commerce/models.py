@@ -1,3 +1,4 @@
+from ntpath import realpath
 from django.db import models
 from mptt.managers import TreeManager
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
@@ -109,7 +110,7 @@ class AdBanner(TimeStampMixin):
 
 
 class AdComment(AuthorMixin, TimeStampMixin):
-    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='adcomment')
     comment = models.TextField()
 
     def __str__(self):
@@ -147,10 +148,20 @@ class AdInvitation(TimeStampMixin):
 
 
 class AdLike(AuthorMixin, TimeStampMixin):
-    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='adlike')
 
     def __str__(self):
         return self.ad.title
 
     class Meta:
         db_table = "ad_likes"
+
+
+class AdSave(AuthorMixin, TimeStampMixin):
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='adsave')
+
+    def __str__(self):
+        return self.ad.title
+
+    class Meta:
+        db_table = "ad_save"

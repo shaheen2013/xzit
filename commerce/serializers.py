@@ -1,4 +1,6 @@
-from asyncore import write
+
+from statistics import mode
+from urllib import request
 from rest_framework import serializers
 from authentication.serializers import UserProfileSerializer
 from commerce import models
@@ -62,13 +64,83 @@ class AdBannerImageShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AdBanner
         fields = ('ratio', 'image_path')
+
+
+class AdCommentSerializerGet(serializers.ModelSerializer):
+    created_by = UserProfileSerializer()
+    class Meta:
+        model = models.AdComment
+        fields = ['comment', 'created_by']
+
+class AdCommentSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = models.AdComment
+        fields = ['ad', 'comment']
+
+class AdLikeSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = models.AdLike
+        fields = ['ad', 'created_by']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        ad = validated_data.get('ad')
+        userAdLike = self.Meta.model.objects.filter(created_by=user, ad_id=ad.id).first()
+        if userAdLike is not None:
+            userAdLike.delete()
+            return userAdLike
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return instance
+
+class AdSaveSerializerGet(serializers.ModelSerializer):
+    created_by = UserProfileSerializer()
+    class Meta:
+        model = models.AdSave
+        fields = ['ad', 'created_by']
+
+class AdSaveSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = models.AdSave
+        fields = ['ad', 'created_by']
     
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        ad = validated_data.get('ad')
+        userAdSave = self.Meta.model.objects.filter(created_by=user, ad_id=ad.id).first()
+        if userAdSave is not None:
+            userAdSave.delete()
+            return userAdSave
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return instance
+
     
 class AdSerializerGet(serializers.ModelSerializer):
     business_type = GetBusinessTypesSerializer(read_only=True)
     business_sub_type = GetBusinessTypesSerializer(many=True, read_only=True)
     adimages = AdBannerImageShowSerializer(many=True, read_only=True, source='adimage')
     created_by = UserProfileSerializer()
+    ad_like = serializers.SerializerMethodField(method_name='count_likes')
+    ad_comment = AdCommentSerializerGet(many=True, source='adcomment')
+    ad_save = AdSaveSerializerGet(many=True, source='adsave')
+
+    def count_likes(self, instance: models.Ad):
+        return instance.adlike.all().count()
+    
+    # def get_comments(self, instance: models.Ad):
+    #     comment = instance.adcomment.all()
+    #     serializer = AdCommentSerializerGet(comment, many=True)
+    #     return serializer.data
+    
+    # def get_saved_ad(self, instance: models.Ad):
+    #     request = self.context.get('request')
+    #     comment = instance.adsave.filter(created_by=request.user)
+    #     serializer = AdSaveSerializerGet(comment, many=True)
+    #     return serializer.data
+
     class Meta:
         model = models.Ad
         fields = '__all__'

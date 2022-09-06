@@ -23,4 +23,7 @@ urlpatterns = [
 
     path('ad/images/', views.AdBannerImageCreateApiView.as_view()),
     path('', include(router.urls)),
+    path('ad/comment/create/', views.AdCommentCreate.as_view()),
+    path('ad/like/create/', views.AdLikeCreate.as_view()),
+    path('ad/save/create/', views.AdSaveCreate.as_view()),
 ]

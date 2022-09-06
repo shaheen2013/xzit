@@ -51,7 +51,31 @@ class AdApiView(ModelViewSet):
             image.image_path.delete(False)
         return super().destroy(request, *args, **kwargs)
 
-    
+
+class AdCommentCreate(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.AdCommentSerializerPost
+
+
+class AdLikeCreate(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.AdLikeSerializerPost
+
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        return Response({'details' : 'Ad Liked', 'status': status.HTTP_201_CREATED})
+
+
+class AdSaveCreate(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.AdSaveSerializerPost
+
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        return Response({'details' : 'Ad Saved', 'status': status.HTTP_201_CREATED})
+
+
+
 class AdReportApiView(CreateAPIView):
     """
         Report to Story
