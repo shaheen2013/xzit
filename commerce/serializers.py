@@ -1,4 +1,5 @@
 
+from dataclasses import field
 from statistics import mode
 from urllib import request
 from rest_framework import serializers
@@ -214,6 +215,12 @@ class CreateInviteSerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.save()
         return instance
+
+class CreateInviteSuccessSerializer(serializers.ModelSerializer):
+    invited_to = UserProfileSerializer()
+    class Meta:
+        model = models.AdInvitation
+        fields = ['ad', 'invited_to', 'created_at']
 
 class AdInvitationListSerializer(serializers.ModelSerializer):
     

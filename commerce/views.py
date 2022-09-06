@@ -90,6 +90,15 @@ class SendAdInviteApiView(CreateAPIView):
     serializer_class = serializers.CreateInviteSerializer
     permission_classes = [IsAuthenticated]
 
+    # overriding create methode for custome Response
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        ad = request.data.get('ad')
+        adinvitation = models.AdInvitation.objects.filter(ad=ad)
+        return Response(serializers.CreateInviteSuccessSerializer(adinvitation, many=True).data)
+        # adInvitation = models.AdInvitation.objects.filter(ad=request.data['ad'])
+        
+
 class AdInvitationUpdateApiView(UpdateAPIView):
     serializer_class = serializers.AdInvitationListSerializer
     permission_classes = [IsAuthenticated]

@@ -10,6 +10,8 @@ from xzit.emails import send_otp, send_reset_otp
 from django.contrib.auth import password_validation as password_validator
 from django.core import exceptions
 
+from xzit.settings import MEDIA_URL
+
 
 
 class AmenitiesSerializer(serializers.ModelSerializer):
@@ -181,8 +183,12 @@ class LoginSuccessSerializer(serializers.ModelSerializer):
         
     def get_profile_image(self, obj):
         request = self.context.get('request')
-        return request.build_absolute_uri(obj.profile_image)
-        
+        # return request.build_absolute_uri(obj.profile_image)
+        host = request.META['HTTP_HOST']
+        if str(obj.profile_image):
+            return host + MEDIA_URL + str(obj.profile_image)
+        else:
+            return ''
 
 
 class OtpResendSerialize(serializers.Serializer):
