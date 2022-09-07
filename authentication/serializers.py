@@ -63,6 +63,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class AdminRegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'username',

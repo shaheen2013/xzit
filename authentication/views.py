@@ -193,7 +193,7 @@ class AdminLogin(Login):
         # if user.is_verified is not True: 
         #     return Response({'details' : 'You are not OTP verified. Please verify your OTP'})
         
-        response.data = serializers.LoginSuccessSerializer(user).data
+        response.data = serializers.LoginSuccessSerializer(user, context={'request': request}).data
         return response
         
 class AccountVerifyApiView(generics.CreateAPIView):
