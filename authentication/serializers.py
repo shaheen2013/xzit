@@ -208,11 +208,13 @@ class AccountVerificationSerializer(serializers.ModelSerializer):
         fields = ('email', )
 
     def create(self, validated_data):
-        email = validated_data['email']
-        if self.Meta.model.objects.filter(email=email).exists():
-            user = User.objects.filter(email=email).first()
+        email = validated_data.get('email')
+        user = User.objects.filter(email=email).first()
+        if user:
             send_otp(email, user)
             return user
+        else:
+            raise ValidationError({'details': 'User not Found with the Email', 'status': 400})
 
 class PasswordResetSerializer(serializers.ModelSerializer):
     class Meta:
