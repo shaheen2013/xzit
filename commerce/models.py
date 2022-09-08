@@ -1,4 +1,5 @@
 from ntpath import realpath
+from re import T
 from django.db import models
 from mptt.managers import TreeManager
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
@@ -31,21 +32,20 @@ class BusinessType(MPTTModel, TimeStampMixin):
 class Ad(AuthorMixin, TimeStampMixin):
     business_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE, related_name='ad_business_type')
     business_sub_type = models.ManyToManyField(BusinessType,  related_name='ad_business_sub_type')
-    company_name = models.CharField(max_length=255)
-    title = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    latitude = models.CharField(max_length=255)
-    longitude = models.CharField(max_length=255)
-    parking = models.CharField(max_length=255)
-    event_duration = models.CharField(max_length=255)
-    event_time = models.DateTimeField()
-    event_days = models.IntegerField()
-    country_code = models.CharField(max_length=255)
-    phone = models.CharField(max_length=40)
+    company_name = models.CharField(max_length=255, null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    latitude = models.CharField(max_length=255, null=True, blank=True)
+    longitude = models.CharField(max_length=255, null=True, blank=True)
+    parking = models.CharField(max_length=255, null=True, blank=True)
+    event_duration = models.CharField(max_length=255, null=True, blank=True)
+    event_time = models.DateTimeField(null=True, blank=True)
+    event_days = models.IntegerField(null=True, blank=True)
+    country_code = models.CharField(max_length=255, null=True, blank=True)
+    phone = models.CharField(max_length=40, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    amenties = models.CharField(max_length=255)
+    amenties = models.CharField(max_length=255, null=True, blank=True)
     total_shares = models.CharField(max_length=20, default=0, blank=True, null=True)
-    container_ratio = models.CharField(max_length=255)
 
     def __str__(self):
         return self.title
@@ -127,7 +127,7 @@ class AdInvitation(TimeStampMixin):
         ('accepted', 'Accepted'),
         ('declined', 'Declined')
     )
-    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='adinvation')
     referrer_id = models.CharField(max_length=20)
     invited_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='invited')
     invited_to = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='inviting')

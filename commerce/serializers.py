@@ -118,6 +118,11 @@ class AdSaveSerializerPost(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class AdInvitationListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AdInvitation
+        fields = "__all__"
+
     
 class AdSerializerGet(serializers.ModelSerializer):
     business_type = GetBusinessTypesSerializer(read_only=True)
@@ -127,20 +132,10 @@ class AdSerializerGet(serializers.ModelSerializer):
     ad_like = serializers.SerializerMethodField(method_name='count_likes')
     ad_comment = AdCommentSerializerGet(many=True, source='adcomment')
     ad_save = AdSaveSerializerGet(many=True, source='adsave')
+    invitations = AdInvitationListSerializer(many=True, source='adinvation')
 
     def count_likes(self, instance: models.Ad):
         return instance.adlike.all().count()
-    
-    # def get_comments(self, instance: models.Ad):
-    #     comment = instance.adcomment.all()
-    #     serializer = AdCommentSerializerGet(comment, many=True)
-    #     return serializer.data
-    
-    # def get_saved_ad(self, instance: models.Ad):
-    #     request = self.context.get('request')
-    #     comment = instance.adsave.filter(created_by=request.user)
-    #     serializer = AdSaveSerializerGet(comment, many=True)
-    #     return serializer.data
 
     class Meta:
         model = models.Ad
@@ -221,12 +216,7 @@ class CreateInviteSuccessSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AdInvitation
         fields = ['ad', 'invited_to', 'created_at']
-
-class AdInvitationListSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = models.AdInvitation
-        fields = "__all__"
+        
 
 class InviteDetailSerializer(serializers.ModelSerializer):
     
