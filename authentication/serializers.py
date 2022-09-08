@@ -28,6 +28,7 @@ class BusinessHourSerializer(serializers.Serializer):
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'username',
@@ -108,6 +109,7 @@ class UserBasicInfoUpdateSerializer(serializers.ModelSerializer):
 
 
 class MerchantRegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
     class Meta:
         model = User
         fields = ('id', 'username',
