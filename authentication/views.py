@@ -143,7 +143,7 @@ class OtpVerifyApiView(generics.GenericAPIView):
                 return Response({'details' : 'You are already verified.'}, 200)
             user.is_verified = True 
             user.save()
-            login_details = serializers.LoginSuccessSerializer(user).data 
+            login_details = serializers.LoginSuccessSerializer(user, context={'request': request}).data 
             return Response({'message': 'Congratulations! Your OTP has been verified.', 'login_details' : login_details}, 200)
             
         return Response({'details': 'Invalid data'}, 400)
