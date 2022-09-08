@@ -243,7 +243,7 @@ class ReservationSerializer(serializers.ModelSerializer):
     }
     class Meta: 
         model = models.Reservation
-        fields = ('id','ad', 'date', 'service', 'time', 'table', 'table_duration', 'status', 'guest', 'alternative_suggestion', 'suggestion_status')
+        fields = ('id','ad', 'date', 'service', 'time', 'table', 'table_duration', 'status', 'guest')
         
 class ReservationCreateSerializer(ReservationSerializer):
     extra_kwargs = {
@@ -269,9 +269,3 @@ class ReservationUpdateSerializer(ReservationSerializer):
         'created_at': {'read_only' : True},
         'created_by': {'read_only': True }
     }
-
-
-class ReservationAproveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Reservation
-        fields = ['status', 'alternative_suggestion']

@@ -220,23 +220,4 @@ class MerchantReservationListApiView(ListAPIView):
         ads = models.Ad.objects.filter(created_by_id__pk=self.request.user.id) 
         return models.Reservation.objects.filter(ad__in=ads)
 
-
-class IsAuthenticatedMerchant(IsAuthenticated):
-    """
-    Allows access only to authenticated users.
-    """
-
-    def has_permission(self, request, view):
-        return bool(super().has_permission(request, view) and request.user.groups.filter(name="merchant").exists())
-
-class ReservationStatus(UpdateAPIView):
-    """ 
-        Reservation approval update. 
-    """
-    
-    serializer_class = serializers.ReservationAproveSerializer
-    lookup_field = "id"
-    queryset = models.Reservation.objects.all()
-    permission_classes = [IsAuthenticatedMerchant]
-
         

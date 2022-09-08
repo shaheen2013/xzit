@@ -73,8 +73,6 @@ class Reservation(AuthorMixin, TimeStampMixin):
     table_duration = models.CharField(max_length=50, null=True, blank=True)
     service = models.CharField(max_length=200, null=True, blank=True)
     status = models.BooleanField(default=False, blank=True)
-    alternative_suggestion = models.TextField(null=True, blank=True)
-    suggestion_status = models.BooleanField(default=True, null=True, blank=True)
     
     class Meta:
         db_table = "reservations"

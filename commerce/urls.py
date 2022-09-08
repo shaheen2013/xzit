@@ -20,7 +20,6 @@ urlpatterns = [
     path('reservations/<int:id>/', views.ReservationDetailApiView.as_view()),
     path('user/reservations/<int:id>/update/', views.ReservationUserUpdateApiView.as_view()),
     path('merchant/reservations/<int:id>/update/', views.ReservationMerchantUpdateApiView.as_view()),
-    path('merchant/reservations/<int:id>/status/', views.ReservationStatus.as_view()),
 
     path('ad/images/', views.AdBannerImageCreateApiView.as_view()),
     path('', include(router.urls)),
