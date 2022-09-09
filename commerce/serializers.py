@@ -232,7 +232,7 @@ class ReservationSerializer(serializers.ModelSerializer):
     }
     class Meta: 
         model = models.Reservation
-        fields = ('id','ad', 'date', 'service', 'time', 'table', 'table_duration', 'guest', 'num_of_guest', 'marchant_status')
+        fields = ('id','ad', 'date', 'service', 'time', 'table', 'table_duration', 'guest', 'num_of_guest', 'marchant_status','has_alternavite','date_alt','time_alt','table_alt','user_status')
         
 class ReservationCreateSerializer(ReservationSerializer):
     extra_kwargs = {
