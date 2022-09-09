@@ -23,6 +23,8 @@ urlpatterns = [
     path('merchant/reservations/<int:id>/set_alt/', views.ReservationMerchantSetAlternative.as_view()),
     path('merchant/alt-reservations/<int:id>/approve/', views.AlternativeReservationMerchantStatus.as_view()),
     path('user/alt-reservations/<int:id>/approve/', views.AlternativeReservationUserStatus.as_view()),
+    path('merchant/alt-reservations/list/', views.MerchantAltReservationListApiView.as_view()),
+    path('user/alt-reservations/list/', views.UserAltReservationListApiView.as_view()),
 
     path('ad/images/', views.AdBannerImageCreateApiView.as_view()),
     path('', include(router.urls)),

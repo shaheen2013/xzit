@@ -262,4 +262,26 @@ class MerchantReservationListApiView(ListAPIView):
         ads = models.Ad.objects.filter(created_by_id__pk=self.request.user.id) 
         return models.Reservation.objects.filter(ad__in=ads)
 
+
+class MerchantAltReservationListApiView(ListAPIView):
+    """ 
+    Reservations list for merchant
+    """
+    serializer_class = serializers.ReservationSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        ads = models.Ad.objects.filter(created_by_id__pk=self.request.user.id) 
+        return models.Reservation.objects.filter(ad__in=ads, has_alternavite=True, marchant_status='pending')
+
+class UserAltReservationListApiView(ListAPIView):
+    """ 
+        User reservation list
+    """
+    serializer_class = serializers.UserReservationListSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return models.Reservation.objects.filter(created_by=self.request.user.id, has_alternavite=True, user_status='pending')
+
         
