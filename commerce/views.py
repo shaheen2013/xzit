@@ -147,6 +147,14 @@ class IsAuthenticatedMerchant(IsAuthenticated):
         return bool(super().has_permission(request, view) and request.user.groups.filter(name="merchant").exists())
 
 
+class IsAuthenticatedUser(IsAuthenticated):
+    """
+    Allows access only to authenticated merchant group users.
+    """
+    def has_permission(self, request, view):
+        return bool(super().has_permission(request, view) and request.user.groups.filter(name="user").exists())
+
+
 class ReservationCreateApiView(CreateAPIView):
     """ 
         Create a reservation
@@ -208,6 +216,40 @@ class ReservationMerchantUpdateApiView(UpdateAPIView):
         if ad.created_by_id != request.user.id:
             return Response({ "details": "You have no permission to update this"}, 403)
         return super().partial_update(request, *args, **kwargs)
+
+
+class ReservationMerchantSetAlternative(UpdateAPIView):
+    """ 
+        Reservation Update. 
+    """
+    permission_classes = [IsAuthenticatedMerchant]
+    serializer_class = serializers.ReservationSetAltSerializer
+    queryset = models.Reservation.objects.all()
+    lookup_field = "id"
+    
+    def patch(self, request, *args, **kwargs):
+        reservation = get_object_or_404(models.Reservation, id=kwargs.get("id"))
+        ad = reservation.ad 
+        if ad.created_by_id != request.user.id:
+            return Response({ "details": "You have no permission to update this"}, 403)
+        return super().partial_update(request, *args, **kwargs)
+
+
+class AlternativeReservationMerchantStatus(UpdateAPIView):
+    permission_classes = [IsAuthenticatedMerchant]
+    serializer_class = serializers.AlternativeReservationStatusMerchantSerializer
+    queryset = models.Reservation.objects.all()
+    lookup_field = "id"
+
+
+class AlternativeReservationUserStatus(UpdateAPIView):
+    permission_classes = [IsAuthenticatedUser]
+    serializer_class = serializers.AlternativeReservationStatusUserSerializer
+    queryset = models.Reservation.objects.all()
+    lookup_field = "id"
+
+
+
     
 class MerchantReservationListApiView(ListAPIView):
     """ 

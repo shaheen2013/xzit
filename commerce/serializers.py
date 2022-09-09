@@ -2,6 +2,7 @@
 from dataclasses import field
 from statistics import mode
 from urllib import request
+from wsgiref import validate
 from rest_framework import serializers
 from authentication.serializers import UserProfileSerializer
 from commerce import models
@@ -225,15 +226,13 @@ class InviteDetailSerializer(serializers.ModelSerializer):
     
     
 class ReservationSerializer(serializers.ModelSerializer):
-    status = serializers.BooleanField(initial=False)
-
     extra_kwargs = {
         'number_of_accepted': {'read_only' : True},
         'ad_details': {'read_only' : True},
     }
     class Meta: 
         model = models.Reservation
-        fields = ('id','ad', 'date', 'service', 'time', 'table', 'table_duration', 'status', 'guest')
+        fields = ('id','ad', 'date', 'service', 'time', 'table', 'table_duration', 'guest', 'num_of_guest', 'marchant_status')
         
 class ReservationCreateSerializer(ReservationSerializer):
     extra_kwargs = {
@@ -259,3 +258,30 @@ class ReservationUpdateSerializer(ReservationSerializer):
         'created_at': {'read_only' : True},
         'created_by': {'read_only': True }
     }
+
+
+class ReservationSetAltSerializer(serializers.ModelSerializer):
+
+    class Meta: 
+        model = models.Reservation
+        fields = ('date_alt', 'time_alt', 'table_alt')
+
+
+    def update(self, instance, validated_data):
+        validated_data['marchant_status'] = 'pending'
+        validated_data['user_status'] = 'pending'
+        validated_data['has_alternavite'] = True
+
+        return super().update(instance, validated_data)
+
+
+class AlternativeReservationStatusMerchantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Reservation
+        fields = ['marchant_status']
+
+
+class AlternativeReservationStatusUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Reservation
+        fields = ['user_status']

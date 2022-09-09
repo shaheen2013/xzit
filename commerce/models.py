@@ -1,5 +1,6 @@
 from ntpath import realpath
 from re import T
+from statistics import mode
 from django.db import models
 from mptt.managers import TreeManager
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
@@ -65,14 +66,32 @@ class Ad(AuthorMixin, TimeStampMixin):
     class Meta:
         db_table = "ads"
 
-class Reservation(AuthorMixin, TimeStampMixin): 
+
+class Reservation(AuthorMixin, TimeStampMixin):
+
+    status = (
+        ('pending', 'pending'),
+        ('accepted', 'accepted'),
+        ('rejected', 'rejected'),
+    )
+
     ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
     date = models.DateField(auto_created=False, auto_now=False)
     time = models.TimeField(auto_created=False, auto_now=False)
     table = models.CharField(max_length=100, null=True, blank=True)
     table_duration = models.CharField(max_length=50, null=True, blank=True)
     service = models.CharField(max_length=200, null=True, blank=True)
-    status = models.BooleanField(default=False, blank=True)
+    num_of_guest = models.PositiveSmallIntegerField(default=1, null=True, blank=True)
+
+    # for alternavite suggestions
+    has_alternavite = models.BooleanField(default=False)
+    date_alt = models.DateField(auto_created=False, auto_now=False, null=True, blank=True)
+    time_alt = models.TimeField(auto_created=False, auto_now=False, null=True, blank=True)
+    table_alt = models.CharField(max_length=100, null=True, blank=True)
+
+    # approval
+    marchant_status = models.CharField(max_length=12, choices=status, default='pending', null=True, blank=True)
+    user_status = models.CharField(max_length=12, choices=status, default= 'accepted', null=True, blank=True)
     
     class Meta:
         db_table = "reservations"

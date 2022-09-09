@@ -20,6 +20,9 @@ urlpatterns = [
     path('reservations/<int:id>/', views.ReservationDetailApiView.as_view()),
     path('user/reservations/<int:id>/update/', views.ReservationUserUpdateApiView.as_view()),
     path('merchant/reservations/<int:id>/update/', views.ReservationMerchantUpdateApiView.as_view()),
+    path('merchant/reservations/<int:id>/set_alt/', views.ReservationMerchantSetAlternative.as_view()),
+    path('merchant/alt-reservations/<int:id>/approve/', views.AlternativeReservationMerchantStatus.as_view()),
+    path('user/alt-reservations/<int:id>/approve/', views.AlternativeReservationUserStatus.as_view()),
 
     path('ad/images/', views.AdBannerImageCreateApiView.as_view()),
     path('', include(router.urls)),
