@@ -1,3 +1,4 @@
+from cgitb import reset
 from requests import request
 from rest_framework.response import Response
 from rest_framework import status
@@ -161,6 +162,11 @@ class ReservationCreateApiView(CreateAPIView):
     """
     serializer_class = serializers.ReservationCreateSerializer
     permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        request.data['invited_guest'] = models.AdInvitation.objects.filter(ad=request.data['ad'], status='accepted', invited_by=request.user).count()
+        return super().create(request, *args, **kwargs)
+
 class UserReservationListApiView(ListAPIView):
     """ 
         User reservation list

@@ -82,6 +82,7 @@ class Reservation(AuthorMixin, TimeStampMixin):
     table_duration = models.CharField(max_length=50, null=True, blank=True)
     service = models.CharField(max_length=200, null=True, blank=True)
     num_of_guest = models.PositiveSmallIntegerField(default=1, null=True, blank=True)
+    invited_guest = models.PositiveSmallIntegerField(default=0, null=True, blank=True)
 
     # for alternavite suggestions
     has_alternavite = models.BooleanField(default=False)
@@ -97,14 +98,13 @@ class Reservation(AuthorMixin, TimeStampMixin):
         db_table = "reservations"
         
     def guest(self, *args, **kwargs):
-        return Ad.objects.filter(id=self.ad_id).count()
+        return self.num_of_guest + self.invited_guest
     
     def date_time(self):
         return f'{self.date} {self.time}'
     
     def ad_titile(self):
         return self.ad.title
-    
     
 
 class AdBanner(TimeStampMixin):
