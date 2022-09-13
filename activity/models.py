@@ -74,28 +74,10 @@ class StoryViewer(TimeStampMixin, AuthorMixin):
               db_table = "story_viewers"
 
 
-from PIL import Image
-from io import BytesIO
-import sys
-from PIL import Image
-from django.core.files.uploadedfile import InMemoryUploadedFile
-
-
-
 class PostImage(TimeStampMixin, AuthorMixin):
        post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='postimage')
        image_path = models.FileField(null=True, blank=True, upload_to="posts/", validators=[FileExtensionValidator(allowed_extensions=["jpg",'png','mp4','jpeg'])])
 
-
-       # def save(self, *args, **kwargs):
-       #        if self.image_path.name is not None:
-       #               name, extension = os.path.splitext(self.image_path.name)
-       #               if extension in ['.jpg','.png','.jpeg']:
-       #                      new_image = reduce_image_size(self.image_path)
-       #                      self.image_path = new_image.path
-       #        super().save(*args, **kwargs)
-
-       
        def save(self, *args, **kwargs):
               if self.image_path.name is not None:
                      name, extension = os.path.splitext(self.image_path.name)

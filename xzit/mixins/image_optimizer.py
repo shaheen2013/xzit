@@ -1,5 +1,3 @@
-from pickletools import optimize
-import profile
 from PIL import Image, ImageOps
 from io import BytesIO
 from django.core.files import File
