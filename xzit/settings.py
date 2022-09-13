@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
 ]
 
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':
     ('rest_framework_simplejwt.authentication.JWTAuthentication', ),

@@ -7,7 +7,7 @@ router.register(r'ad', views.AdApiView, basename='ad')
 # router.register(r'ad/banner', views.AdBannerApiView, basename='ad_banner')
 
 urlpatterns = [
-    path('ad/invitaions/send/', views.SendAdInviteApiView.as_view()),
+    path('ad/invitations/send/', views.SendAdInviteApiView.as_view()),
     path('ad/invitations/requests/', views.AdInvitationsListApiView.as_view()),
     path('ad/invitations/sended/', views.AdSendedInvitationListApiView.as_view()),
     path('ad/invitations/<int:id>/', views.AdInvitationUpdateApiView.as_view()),
