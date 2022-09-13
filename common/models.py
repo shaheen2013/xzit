@@ -31,6 +31,22 @@ class Report(TimeStampMixin, AuthorMixin):
        
        class Meta:
               db_table = "reports"
+
+class Country(models.Model):
+       name = models.CharField(max_length=100, null=False, blank=False,unique= True)
+       iso_code= models.CharField(max_length=50, null=False, blank=False)
+       phone_number_regx = models.CharField(max_length=50, null=False, blank=False)
+
+       def __str__(self) -> str:
+              return self.name
+
+class City(models.Model):
+       name = models.CharField(max_length=100)
+       country = models.ForeignKey(Country,on_delete=models.CASCADE,null=False,blank=False)
+
+       def __str__(self) -> str:
+              return self.name
+
        
 
        
