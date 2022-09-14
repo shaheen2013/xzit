@@ -13,7 +13,7 @@ class ReportReasonSerializers(serializers.ModelSerializer):
 class CountrySerializers(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = ('name','iso_code','phone_number_regx')
+        fields = ('id','name','iso_code','phone_number_regx')
 
 class CitySerializers(serializers.ModelSerializer):
     country = CountrySerializers()
