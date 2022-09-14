@@ -29,5 +29,6 @@ class CustomPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 1000
+    invalid_page_message = 'End of Content.'
     class Meta:
         abstract = True

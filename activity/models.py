@@ -74,14 +74,9 @@ class StoryViewer(TimeStampMixin, AuthorMixin):
               db_table = "story_viewers"
 
 
-
-
-
-
 class PostImage(TimeStampMixin, AuthorMixin):
        post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='postimage')
        image_path = models.FileField(null=True, blank=True, upload_to="posts/", validators=[FileExtensionValidator(allowed_extensions=["jpg",'png','mp4','jpeg'])])
-
 
        def save(self, *args, **kwargs):
               if self.image_path.name is not None:
