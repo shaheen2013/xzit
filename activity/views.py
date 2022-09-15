@@ -35,7 +35,6 @@ class PostFeedListApiView(generics.ListAPIView):
     queryset = Post.objects.select_related('created_by').prefetch_related('postimage', 'postcomment','postlike','postSave').all()
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     pagination_class = CustomPagination
-    # invalid_page_message = 'End of content'
 
     # def get_queryset(self):
     #     return Post.objects.filter(created_by=self.request.user)

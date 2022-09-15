@@ -18,21 +18,22 @@ def reduce_image_size(profile_pic):
     
     #defining reduce amount int number, [that number e.g 50% will be reduced]
     reduce = 20
+    
     # Checking the extension 
     if extension in ['.jpeg', '.JPEG', '.JPG', '.jpg']:
         ex_format = 'JPEG'
         if image.size[0] > 1200 or image.size[1] > 1200:
-            reduce = 25
+            reduce = 30
     else:
         ex_format = 'PNG'
-        if image.size[0] > 1000 or image.size[1] > 1000:
-            reduce = 45
+        if image.size[0] in range(1000, 3000) or image.size[1] in range(1000, 3000):
+            reduce = 50
+        elif image.size[0] in range(3000, 10000) or image.size[1] in range(3000, 10000):
+            reduce = 70
         else:
             reduce = 35
             
-    
-    image = image.convert('RGB')
-    image = ImageOps.exif_transpose(image)
+    # image = ImageOps.exif_transpose(image)
     thumb_io = BytesIO()
 
     height = get_calculated_size(image.size[0], reduce)
