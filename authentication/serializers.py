@@ -271,11 +271,21 @@ class UserProfileSerializer(serializers.ModelSerializer):
     business_type = BusinessTypesSerializer(many=True)
     business_sub_type = BusinessTypesSerializer(many=True)
     full_name = serializers.SerializerMethodField(method_name='get_full_name')
+    profile_image = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name','full_name', 'gender', 'email', 'birth_date', 'bio', 'location', 'phone', 'business_name', 'business_type', 'business_sub_type', 'profile_image', 'cover_image', 'role','is_active' )
     def get_full_name(self, instance:User):
         return instance.name()
+
+    def get_profile_image(self, obj):
+        request = self.context.get('request')
+        # return request.build_absolute_uri(obj.profile_image)
+        host = request.META['HTTP_HOST']
+        if str(obj.profile_image):
+            return host + MEDIA_URL + str(obj.profile_image)
+        else:
+            return ''
 
 class MerchantProfileSerializer(serializers.ModelSerializer):
     extra_kwargs = {

@@ -1,8 +1,10 @@
 from ntpath import realpath
 from re import T
 from statistics import mode
+from tokenize import group
 from django.db import models
 from mptt.managers import TreeManager
+from authentication.models import BusinessHour
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth import get_user_model
@@ -20,6 +22,7 @@ class BusinessType(MPTTModel, TimeStampMixin):
     name = models.CharField(max_length=255)
     icon = models.ImageField("Type Icon", upload_to="icons/", blank=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='children')
+    business_group = models.PositiveSmallIntegerField(null=True, blank=True)
 
     objects = BusinessTypeManager()
 
@@ -33,6 +36,7 @@ class BusinessType(MPTTModel, TimeStampMixin):
 class Ad(AuthorMixin, TimeStampMixin):
     business_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE, related_name='ad_business_type')
     business_sub_type = models.ManyToManyField(BusinessType,  related_name='ad_business_sub_type')
+    # business_hour = models.ForeignKey(BusinessHour, )
     company_name = models.CharField(max_length=255, null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
@@ -152,6 +156,8 @@ class AdInvitation(TimeStampMixin):
     invited_to = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='inviting')
     status = models.CharField(max_length=20, choices=STATUS, default='Pending')
     seen_at = models.DateTimeField(null=True, blank=True, auto_now=False)
+    invite_date = models.DateField(null=True, blank=True)
+    invite_time = models.TimeField(null=True, blank=True)
 
     def __str__(self):
         return self.invited_to.name()

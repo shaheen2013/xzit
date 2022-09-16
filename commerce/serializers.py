@@ -198,9 +198,11 @@ class CreateInviteSerializer(serializers.ModelSerializer):
         'referrer_id': {'read_only' : True},
         'invited_by': {'read_only': True}
     }
+    invite_date = serializers.DateField(required=True)
+    invite_time = serializers.TimeField(required=True)
     class Meta:
         model = models.AdInvitation
-        fields  = ['ad', 'invited_to']
+        fields  = ['ad', 'invited_to', 'invite_date', 'invite_time']
 
     def create(self, validated_data):
         request = self.context.get('request')
