@@ -1,8 +1,10 @@
 from ntpath import realpath
 from re import T
 from statistics import mode
+from tokenize import group
 from django.db import models
 from mptt.managers import TreeManager
+from authentication.models import BusinessHour
 from xzit.mixins.models import AuthorMixin, TimeStampMixin
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth import get_user_model
@@ -20,6 +22,7 @@ class BusinessType(MPTTModel, TimeStampMixin):
     name = models.CharField(max_length=255)
     icon = models.ImageField("Type Icon", upload_to="icons/", blank=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='children')
+    business_group = models.PositiveSmallIntegerField(null=True, blank=True)
 
     objects = BusinessTypeManager()
 
@@ -152,6 +155,8 @@ class AdInvitation(TimeStampMixin):
     invited_to = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='inviting')
     status = models.CharField(max_length=20, choices=STATUS, default='Pending')
     seen_at = models.DateTimeField(null=True, blank=True, auto_now=False)
+    invite_date = models.DateField(null=True, blank=True)
+    invite_time = models.TimeField(null=True, blank=True)
 
     def __str__(self):
         return self.invited_to.name()
@@ -184,3 +189,11 @@ class AdSave(AuthorMixin, TimeStampMixin):
 
     class Meta:
         db_table = "ad_save"
+
+
+class AdBusinessHour(models.Model):
+    day = models.CharField(null=True, blank=True, max_length=100)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    description = models.TextField()
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='ad_business_hour')
