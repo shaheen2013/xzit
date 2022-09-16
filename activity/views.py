@@ -209,3 +209,12 @@ class PostShareAPIView(ModelViewSet):
         if self.request.method in ['POST','PUT', 'PATCH']:
             return serializers.PostShareSerializerPost
         return serializers.PostShareSerializerGet
+    
+class UserStoriesView(generics.ListAPIView):
+    serializer_class = serializers.StorySerializer
+    queryset = Story.objects.all()
+    permission_classes= [IsAuthenticated]
+    
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(created_by_id=self.request.user.id)
