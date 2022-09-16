@@ -36,7 +36,6 @@ class BusinessType(MPTTModel, TimeStampMixin):
 class Ad(AuthorMixin, TimeStampMixin):
     business_type = models.ForeignKey(BusinessType, blank=True, null=True, on_delete=models.CASCADE, related_name='ad_business_type')
     business_sub_type = models.ManyToManyField(BusinessType,  related_name='ad_business_sub_type')
-    # business_hour = models.ForeignKey(BusinessHour, )
     company_name = models.CharField(max_length=255, null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
@@ -190,3 +189,11 @@ class AdSave(AuthorMixin, TimeStampMixin):
 
     class Meta:
         db_table = "ad_save"
+
+
+class AdBusinessHour(models.Model):
+    day = models.CharField(null=True, blank=True, max_length=100)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    description = models.TextField()
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='ad_business_hour')

@@ -1,5 +1,5 @@
 
-from dataclasses import field
+from dataclasses import field, fields
 from statistics import mode
 from urllib import request
 from wsgiref import validate
@@ -124,6 +124,17 @@ class AdInvitationListSerializer(serializers.ModelSerializer):
         model = models.AdInvitation
         fields = "__all__"
 
+class AdBusinessHourSerializerGet(serializers.ModelSerializer):
+    class Meta:
+        model = models.AdBusinessHour
+        # fields = '__all__'
+        exclude = ['ad']
+
+class AdBusinessHourSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = models.AdBusinessHour
+        fields = ['day', 'start_time', 'end_time', 'description', 'ad']
+
     
 class AdSerializerGet(serializers.ModelSerializer):
     business_type = GetBusinessTypesSerializer(read_only=True)
@@ -145,9 +156,27 @@ class AdSerializerGet(serializers.ModelSerializer):
 
 class AdSerializerPostPutPatch(serializers.ModelSerializer):
     adimages = AdBannerImageShowSerializer(many=True, read_only=True, source='adimage')
+    ad_business_hours = AdBusinessHourSerializerGet(many=True)
+
     class Meta:
         model = models.Ad
         fields = '__all__'
+        extra_fields = ['ad_business_hours']
+        # fields = ['company_name', 'title', 'address', 'latitude', 'longitude', 'parking', 'event_duration', 'event_time', 'event_days', 'country_code', 'phone', 'description', 'amenties', 'total_shares', 'ad_business_hour', 'business_type', 'business_sub_type', 'adimages']
+
+    def create(self, validated_data):
+        print(validated_data['ad_business_hours'])
+        ad_business_hours = validated_data.pop('ad_business_hours')
+        ad =  super().create(validated_data)
+        # ad_business_hours['ad'] = ad
+
+        for index, ad_business_hour in enumerate(ad_business_hours):
+            ad_business_hour['ad'] = ad
+            ad_business_hours[index] = models.AdBusinessHour.objects.create(**ad_business_hour)
+        
+        setattr(ad, 'ad_business_hours', ad_business_hours)
+
+        return ad
 
 
 
