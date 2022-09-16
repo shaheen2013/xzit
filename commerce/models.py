@@ -42,9 +42,9 @@ class Ad(AuthorMixin, TimeStampMixin):
     latitude = models.CharField(max_length=255, null=True, blank=True)
     longitude = models.CharField(max_length=255, null=True, blank=True)
     parking = models.CharField(max_length=255, null=True, blank=True)
-    event_duration = models.CharField(max_length=255, null=True, blank=True)
+    event_start_date = models.DateField(max_length=255, null=True, blank=True)
     event_time = models.DateTimeField(null=True, blank=True)
-    event_days = models.IntegerField(null=True, blank=True)
+    event_end_date = models.DateField(null=True, blank=True)
     country_code = models.CharField(max_length=255, null=True, blank=True)
     phone = models.CharField(max_length=40, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -65,6 +65,10 @@ class Ad(AuthorMixin, TimeStampMixin):
     
     def number_of_accepted(self):
         return self.accepted_invites().count()
+
+    def event_duration(self):
+        
+        return ''
 
     class Meta:
         db_table = "ads"
