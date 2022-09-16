@@ -1,4 +1,4 @@
-from dataclasses import field, fields
+
 from rest_framework import serializers
 from .models import ReportReason,Country,City
 
@@ -10,13 +10,20 @@ class ReportReasonSerializers(serializers.ModelSerializer):
             'id': {'read_only': True}
         }
 
-class CountrySerializers(serializers.ModelSerializer):
+
+class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = ('id','name','iso_code','phone_number_regx')
+        fields = '__all__'
 
-class CitySerializers(serializers.ModelSerializer):
-    country = CountrySerializers()
+class CountryDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = '__all__'
+        
+class CitySerializer(serializers.ModelSerializer):
+    country = CountrySerializer(read_only=True, many=False)
     class Meta:
         model = City
-        fields =  ('name','country')
+        fields = '__all__'
+        extra_fields = ['country']
