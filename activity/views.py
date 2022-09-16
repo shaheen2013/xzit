@@ -35,7 +35,6 @@ class PostFeedListApiView(generics.ListAPIView):
     queryset = Post.objects.select_related('created_by').prefetch_related('postimage', 'postcomment','postlike','postSave').all()
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     pagination_class = CustomPagination
-    # invalid_page_message = 'End of content'
 
     # def get_queryset(self):
     #     return Post.objects.filter(created_by=self.request.user)
@@ -210,3 +209,12 @@ class PostShareAPIView(ModelViewSet):
         if self.request.method in ['POST','PUT', 'PATCH']:
             return serializers.PostShareSerializerPost
         return serializers.PostShareSerializerGet
+    
+class UserStoriesView(generics.ListAPIView):
+    serializer_class = serializers.StorySerializer
+    queryset = Story.objects.all()
+    permission_classes= [IsAuthenticated]
+    
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(created_by_id=self.request.user.id)

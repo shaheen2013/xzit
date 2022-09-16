@@ -1,4 +1,5 @@
 from urllib import response
+from xml.dom import ValidationErr
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from authentication import serializers
@@ -352,12 +353,18 @@ class BusinessInterest(generics.CreateAPIView):
                 else:
                     b_type_dict[key].append(value) 
 
+
         user = get_object_or_404(User, id=request.user.id)
         business_types = list(set(b_type_dict['business_type']))
         user.business_sub_type.clear()
         user.business_type.clear()
+
+        business = get_object_or_404(BusinessType, id=business_types[0])
+
         for business_type in business_types:
             b_type = get_object_or_404(BusinessType, id=business_type)
+            if b_type.business_group != business.business_group:
+                raise ValueError('Given business type is not acording to the Combinations!')
             user.business_type.add(b_type)
 
         business_sub_types = list(set(b_type_dict['business_sub_type']))

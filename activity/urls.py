@@ -25,4 +25,5 @@ urlpatterns = [
 
     path('posts/images/', views.PostImageAPIView.as_view()),
     path('posts/saves/', views.PostSaveAPIView.as_view()),
+    path('user/stories/', views.UserStoriesView.as_view())
 ] + router.urls
