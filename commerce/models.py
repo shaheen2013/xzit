@@ -11,6 +11,8 @@ from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 import os 
 from xzit.mixins.image_optimizer import reduce_image_size
+from datetime import datetime
+
 
 class BusinessTypeManager(TreeManager):
     def viewable(self):
@@ -67,8 +69,11 @@ class Ad(AuthorMixin, TimeStampMixin):
         return self.accepted_invites().count()
 
     def event_duration(self):
-        
-        return ''
+        if self.event_start_date and self.event_end_date:
+            delta = datetime.strptime(str(self.event_start_date), "%Y-%m-%d") - datetime.strptime(str(self.event_end_date), "%Y-%m-%d")
+            return delta.days
+        else:
+            return 0
 
     class Meta:
         db_table = "ads"

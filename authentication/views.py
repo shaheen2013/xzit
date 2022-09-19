@@ -14,7 +14,7 @@ from xzit.emails import send_otp
 from django.contrib.auth.models import Permission, Group
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
-
+from rest_framework.views import APIView
 from xzit.mixins.models import CustomPagination
 
 
@@ -364,7 +364,7 @@ class BusinessInterest(generics.CreateAPIView):
         for business_type in business_types:
             b_type = get_object_or_404(BusinessType, id=business_type)
             if b_type.business_group != business.business_group:
-                raise ValueError('Given business type is not acording to the Combinations!')
+                return Response({'Error': 'Given business type is not acording to combination!', 'status':status.HTTP_400_BAD_REQUEST})
             user.business_type.add(b_type)
 
         business_sub_types = list(set(b_type_dict['business_sub_type']))
@@ -374,7 +374,9 @@ class BusinessInterest(generics.CreateAPIView):
 
         serializer_user = serializers.UserProfileSerializer(user)
         return Response(serializer_user.data)
-from rest_framework.views import APIView
+
+
+
 class RoleAssignAPIView(generics.CreateAPIView):
     serializer_class = serializers.RoleAssignSerializer
     permission_classes = [IsAuthenticated]

@@ -145,9 +145,13 @@ class AdSerializerGet(serializers.ModelSerializer):
     ad_comment = AdCommentSerializerGet(many=True, source='adcomment')
     ad_save = AdSaveSerializerGet(many=True, source='adsave')
     invitations = AdInvitationListSerializer(many=True, source='adinvation')
+    event_duration = serializers.SerializerMethodField(method_name='calculate_duration')
 
     def count_likes(self, instance: models.Ad):
         return instance.adlike.all().count()
+
+    def calculate_duration(self, instance: models.Ad):
+        return instance.event_duration()
 
     class Meta:
         model = models.Ad
@@ -165,10 +169,8 @@ class AdSerializerPostPutPatch(serializers.ModelSerializer):
         # fields = ['company_name', 'title', 'address', 'latitude', 'longitude', 'parking', 'event_duration', 'event_time', 'event_days', 'country_code', 'phone', 'description', 'amenties', 'total_shares', 'ad_business_hour', 'business_type', 'business_sub_type', 'adimages']
 
     def create(self, validated_data):
-        print(validated_data['ad_business_hours'])
         ad_business_hours = validated_data.pop('ad_business_hours')
         ad =  super().create(validated_data)
-        # ad_business_hours['ad'] = ad
 
         for index, ad_business_hour in enumerate(ad_business_hours):
             ad_business_hour['ad'] = ad
