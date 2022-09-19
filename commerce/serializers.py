@@ -1,5 +1,6 @@
 
 from dataclasses import field, fields
+from pyexpat import model
 from statistics import mode
 from urllib import request
 from wsgiref import validate
@@ -8,6 +9,7 @@ from authentication.serializers import UserProfileSerializer
 from commerce import models
 from common.models import Report
 from rest_framework.response import Response
+from authentication.models import User
 
 class RecursiveField(serializers.Serializer):
     def to_representation(self, value):
@@ -222,6 +224,7 @@ class AdReportSerializer(serializers.ModelSerializer):
         instance.report_type = "Ad"
         instance.save()
         return instance
+
     
 class CreateInviteSerializer(serializers.ModelSerializer):
     
@@ -231,19 +234,27 @@ class CreateInviteSerializer(serializers.ModelSerializer):
     }
     invite_date = serializers.DateField(required=True)
     invite_time = serializers.TimeField(required=True)
+    invite_to = serializers.ListField(child=serializers.IntegerField(), required=False)
+
     class Meta:
         model = models.AdInvitation
-        fields  = ['ad', 'invited_to', 'invite_date', 'invite_time']
+        fields  = ['ad', 'invite_date', 'invite_time', 'invite_to']
 
     def create(self, validated_data):
         request = self.context.get('request')
         if request is not None: 
             user = request.user 
             validated_data['invited_by'] = user 
-            validated_data['referrer_id'] = user.id 
-        instance = self.Meta.model(**validated_data)
-        instance.save()
-        return instance
+            validated_data['referrer_id'] = user.id
+
+            invities = validated_data.pop('invite_to')
+            invitaion_list = []
+            for invited in invities:
+                validated_data['invited_to'] = User.objects.filter(id=int(invited)).first()
+                instance = self.Meta.model(**validated_data)
+                instance.save()
+                invitaion_list.append(instance)
+        return invitaion_list[0]
 
 class CreateInviteSuccessSerializer(serializers.ModelSerializer):
     invited_to = UserProfileSerializer()

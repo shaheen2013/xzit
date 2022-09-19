@@ -95,7 +95,7 @@ class SendAdInviteApiView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)
         ad = request.data.get('ad')
-        adinvitation = models.AdInvitation.objects.filter(ad=ad)
+        adinvitation = models.AdInvitation.objects.filter(ad=ad, invited_to__in=request.data['invite_to'], invited_by=request.user.id)
         return Response(serializers.CreateInviteSuccessSerializer(adinvitation, many=True, context={'request': request}).data)
         # adInvitation = models.AdInvitation.objects.filter(ad=request.data['ad'])
         
