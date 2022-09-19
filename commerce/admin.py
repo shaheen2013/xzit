@@ -9,7 +9,7 @@ class ReservationAdmin(admin.ModelAdmin):
        list_display = ['ad_titile', 'service', 'date_time', 'table', 'table_duration', 'status', 'guest']
 @admin.register(Ad)
 class AdAdmin(admin.ModelAdmin):
-       list_display = ['title', 'number_of_invites', 'number_of_accepted']
+       list_display = ['title', 'number_of_invites', 'number_of_accepted', 'event_duration']
 
 
 admin.site.register(BusinessType)

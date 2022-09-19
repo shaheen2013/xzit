@@ -32,7 +32,7 @@ class SingleBusinessTypeApiView(RetrieveAPIView):
 
     
 class AdApiView(ModelViewSet):
-    queryset = models.Ad.objects.select_related('business_type').prefetch_related('adimage', 'business_sub_type').all()
+    queryset = models.Ad.objects.select_related('business_type').prefetch_related('adimage', 'business_sub_type').all().order_by('-id')
     serializer_class = serializers.AdSerializerGet
     permission_classes = [IsAuthenticated]
     # parser_classes = [FormParser]
@@ -44,7 +44,7 @@ class AdApiView(ModelViewSet):
         
     
     def get_queryset(self):
-        return models.Ad.objects.filter(created_by=self.request.user.id)
+        return models.Ad.objects.filter(created_by=self.request.user.id).order_by('-id')
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

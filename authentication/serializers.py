@@ -369,7 +369,7 @@ class RoleAssignSerializer(serializers.Serializer):
         return validated_data  
 
 class BusinessInterestSubSerializer(serializers.Serializer):
-    business_type = serializers.PrimaryKeyRelatedField(queryset=BusinessType.objects.all(), many=False)
+    business_type = serializers.PrimaryKeyRelatedField(queryset=BusinessType.objects.all(), many=True)
     business_sub_type = serializers.PrimaryKeyRelatedField(
         queryset=BusinessType.objects.all(), many=True
     )
