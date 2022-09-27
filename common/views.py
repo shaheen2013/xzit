@@ -16,7 +16,7 @@ class ReportReasonList(generics.ListAPIView):
     
     
 @api_view(['POST', 'GET'])  
-def FriendListFunc(request):
+def friend_list(request):
     if request.method == "GET":
         serializer = serializers.FriendSerializers(Friends.objects.all(), many=True)
         return Response(serializer.data)
@@ -34,7 +34,7 @@ def FriendListFunc(request):
         return Response(serializer.data)
     
 @api_view(['POST', 'GET'])  
-def BlockList(request):
+def block_list(request):
     if request.method == "GET":
         serializer = serializers.BlockFriendSerializers(BlockFriends.objects.all(), many=True)
         return Response(serializer.data)
