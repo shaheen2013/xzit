@@ -1,8 +1,10 @@
+from turtle import onclick
 from django.db import models
 from activity.models import Post, Story
 from authentication.models import User
 from commerce.models import Ad
 from xzit.mixins.models import AuthorMixin, TimeStampMixin 
+
 
 class ReportReason(TimeStampMixin, models.Model):
        reason = models.CharField(max_length=200, null=True, blank=True)
@@ -33,5 +35,12 @@ class Report(TimeStampMixin, AuthorMixin):
               db_table = "reports"
        
 
+class Friends(models.Model):
+       user=models.ForeignKey(User,blank=False, null=False, on_delete=models.CASCADE)
+       def __str__(self) -> str:
+              return str(self.user.username)
        
-       
+class BlockFriends(models.Model):
+       user=models.ForeignKey(User,related_name='blocked_users', blank=False, null=False,on_delete=models.CASCADE)
+       def __str__(self) -> str:
+              return str(self.user.username)
